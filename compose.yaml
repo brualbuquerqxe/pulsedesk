@@ -1,6 +1,7 @@
 name: pulsedesk
 
 services:
+
   postgres:
     image: postgres:17-alpine
     container_name: pulsedesk-postgres
@@ -32,6 +33,7 @@ services:
     networks:
       - pulsedesk-network
 
+
   kafka-volume-init:
     image: alpine:3.22
     container_name: pulsedesk-kafka-volume-init
@@ -51,6 +53,7 @@ services:
 
     networks:
       - pulsedesk-network
+
 
   kafka:
     image: apache/kafka:4.3.1
@@ -125,6 +128,7 @@ services:
     networks:
       - pulsedesk-network
 
+
   kafka-init:
     image: apache/kafka:4.3.1
     container_name: pulsedesk-kafka-init
@@ -178,14 +182,142 @@ services:
     networks:
       - pulsedesk-network
 
+
+  market-data-service:
+    build:
+      context: ./backend/market-data-service
+      dockerfile: Dockerfile
+
+    container_name: pulsedesk-market-data-service
+    restart: unless-stopped
+
+    depends_on:
+      kafka:
+        condition: service_healthy
+      kafka-init:
+        condition: service_completed_successfully
+
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:19092
+
+    ports:
+      - "8081:8081"
+
+    networks:
+      - pulsedesk-network
+
+
+  trading-service:
+    build:
+      context: ./backend/trading-service
+      dockerfile: Dockerfile
+
+    container_name: pulsedesk-trading-service
+    restart: unless-stopped
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      kafka-init:
+        condition: service_completed_successfully
+
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:19092
+
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/pulsedesk?currentSchema=trading
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-pulsedesk}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-pulsedesk_dev_password}
+
+    ports:
+      - "8082:8082"
+
+    networks:
+      - pulsedesk-network
+
+
+  portfolio-service:
+    build:
+      context: ./backend/portfolio-service
+      dockerfile: Dockerfile
+
+    container_name: pulsedesk-portfolio-service
+    restart: unless-stopped
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      kafka-init:
+        condition: service_completed_successfully
+
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:19092
+
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/pulsedesk?currentSchema=portfolio
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-pulsedesk}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-pulsedesk_dev_password}
+
+    ports:
+      - "8083:8083"
+
+    networks:
+      - pulsedesk-network
+
+
+  websocket-gateway:
+    build:
+      context: ./backend/websocket-gateway
+      dockerfile: Dockerfile
+
+    container_name: pulsedesk-websocket-gateway
+    restart: unless-stopped
+
+    depends_on:
+      kafka:
+        condition: service_healthy
+      kafka-init:
+        condition: service_completed_successfully
+
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:19092
+
+    ports:
+      - "8084:8084"
+
+    networks:
+      - pulsedesk-network
+
+
+  frontend:
+    build:
+      context: ./frontend/pulsedesk-ui
+      dockerfile: Dockerfile
+
+    container_name: pulsedesk-frontend
+    restart: unless-stopped
+
+    environment:
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1"
+
+    ports:
+      - "4200:4200"
+
+    networks:
+      - pulsedesk-network
+
 volumes:
+
   postgres-data:
     name: pulsedesk-postgres-data
 
   kafka-data:
     name: pulsedesk-kafka-data
 
+
 networks:
+
   pulsedesk-network:
     name: pulsedesk-network
-    driver: bridge

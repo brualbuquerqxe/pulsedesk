@@ -1,0 +1,8 @@
+{
+  "eventId": "5e64a461-fbf6-4528-a80e-ff9dabd52f20",
+  "orderId": "7eb8d85d-4ee8-4e5a-b9b1-99509cb93671",
+  "userId": "11111111-1111-1111-1111-111111111111",
+  "status": "REJECTED",
+  "rejectionReason": "INSUFFICIENT_CASH",
+  "timestamp": "2026-08-07T19:41:02Z"
+}

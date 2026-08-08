@@ -1,0 +1,11 @@
+{
+  "eventId": "861c109a-ea7f-4171-a434-b697454357ea",
+  "orderId": "7eb8d85d-4ee8-4e5a-b9b1-99509cb93671",
+  "userId": "11111111-1111-1111-1111-111111111111",
+  "symbol": "AAPL",
+  "side": "BUY",
+  "quantity": 10,
+  "executionPrice": 213.45,
+  "totalAmount": 2134.50,
+  "timestamp": "2026-08-07T19:41:02Z"
+}

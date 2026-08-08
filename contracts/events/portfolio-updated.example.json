@@ -1,0 +1,23 @@
+{
+  "eventId": "3246949e-6410-4bad-adb5-875f35069d77",
+  "userId": "11111111-1111-1111-1111-111111111111",
+
+  "updateType": "TRADE_EXECUTION",
+  "orderId": "7eb8d85d-4ee8-4e5a-b9b1-99509cb93671",
+  "side": "BUY",
+
+  "cashBalance": 97865.50,
+
+  "changedPositions": [
+    {
+      "symbol": "AAPL",
+      "quantity": 10,
+      "averagePrice": 213.45,
+      "lastPrice": 213.45,
+      "marketValue": 2134.50
+    }
+  ],
+
+  "totalEquity": 100000.00,
+  "timestamp": "2026-08-07T19:41:03Z"
+}

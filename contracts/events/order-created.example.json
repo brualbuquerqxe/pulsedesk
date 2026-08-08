@@ -1,0 +1,10 @@
+{
+  "eventId": "f97d3c26-2b4b-4ea3-9437-6d0b66b2ff76",
+  "orderId": "7eb8d85d-4ee8-4e5a-b9b1-99509cb93671",
+  "userId": "11111111-1111-1111-1111-111111111111",
+  "symbol": "AAPL",
+  "side": "BUY",
+  "quantity": 10,
+  "status": "CREATED",
+  "timestamp": "2026-08-07T19:40:00Z"
+}
