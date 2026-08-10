@@ -1,0 +1,39 @@
+{
+  "type": "record",
+  "name": "AnalyticsUpdated",
+  "namespace": "com.pulsedesk.contracts.events",
+  "fields": [
+    {
+      "name": "eventId",
+      "type": "string"
+    },
+    {
+      "name": "sourceEventId",
+      "type": "string"
+    },
+    {
+      "name": "symbol",
+      "type": "string"
+    },
+    {
+      "name": "indicator",
+      "type": "string"
+    },
+    {
+      "name": "value",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 18,
+        "scale": 6
+      }
+    },
+    {
+      "name": "timestamp",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      }
+    }
+  ]
+}
