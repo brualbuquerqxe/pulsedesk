@@ -1,0 +1,35 @@
+{
+  "type": "record",
+  "name": "MarketDataUpdated",
+  "namespace": "com.pulsedesk.contracts.events",
+  "fields": [
+    {
+      "name": "eventId",
+      "type": "string"
+    },
+    {
+      "name": "symbol",
+      "type": "string"
+    },
+    {
+      "name": "price",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 18,
+        "scale": 6
+      }
+    },
+    {
+      "name": "percentageChange",
+      "type": "double"
+    },
+    {
+      "name": "timestamp",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      }
+    }
+  ]
+}
