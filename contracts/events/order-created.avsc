@@ -1,0 +1,42 @@
+{
+  "type": "record",
+  "name": "OrderCreated",
+  "namespace": "com.pulsedesk.contracts.events",
+  "fields": [
+    {
+      "name": "eventId",
+      "type": "string"
+    },
+    {
+      "name": "orderId",
+      "type": "string"
+    },
+    {
+      "name": "userId",
+      "type": "string"
+    },
+    {
+      "name": "symbol",
+      "type": "string"
+    },
+    {
+      "name": "side",
+      "type": {
+        "type": "enum",
+        "name": "OrderSide",
+        "symbols": [
+          "BUY",
+          "SELL"
+        ]
+      }
+    },
+    {
+      "name": "quantity",
+      "type": "long"
+    },
+    {
+      "name": "timestamp",
+      "type": "string"
+    }
+  ]
+}
