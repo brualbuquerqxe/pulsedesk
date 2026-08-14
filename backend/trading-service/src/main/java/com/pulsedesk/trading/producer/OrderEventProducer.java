@@ -4,14 +4,15 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import com.pulsedesk.contracts.events.OrderCreated;
+import com.pulsedesk.contracts.events.OrderExecuted;
 
 @Component
 public class OrderEventProducer {
 
-    private final KafkaTemplate<String, OrderCreated> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public OrderEventProducer(
-        KafkaTemplate<String, OrderCreated> kafkaTemplate) {
+            KafkaTemplate<String, Object> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
@@ -19,6 +20,14 @@ public class OrderEventProducer {
 
         kafkaTemplate.send(
                 "order.created",
+                event.getOrderId().toString(),
+                event);
+    }
+
+    public void publishExecuted(OrderExecuted event) {
+
+        kafkaTemplate.send(
+                "order.executed",
                 event.getOrderId().toString(),
                 event);
     }

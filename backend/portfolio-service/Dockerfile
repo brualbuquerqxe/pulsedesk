@@ -1,12 +1,14 @@
 FROM maven:3.9.11-eclipse-temurin-21 AS build
 
-WORKDIR /app
+WORKDIR /workspace/backend/portfolio-service
 
-COPY pom.xml .
+COPY backend/portfolio-service/pom.xml .
 
 RUN mvn dependency:go-offline -B
 
-COPY src ./src
+COPY backend/portfolio-service/src ./src
+
+COPY contracts /workspace/contracts
 
 RUN mvn clean package -DskipTests
 
@@ -15,7 +17,7 @@ FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
-COPY --from=build /app/target/*.jar app.jar
+COPY --from=build /workspace/backend/portfolio-service/target/*.jar app.jar
 
 EXPOSE 8083
 
