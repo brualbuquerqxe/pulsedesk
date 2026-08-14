@@ -122,7 +122,10 @@
             <artifactId>spring-boot-starter-webmvc-test</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-restclient</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -148,6 +151,8 @@
                             <sourceDirectory>
                                 ${project.basedir}/../../contracts/events
                             </sourceDirectory>
+
+                            <enableDecimalLogicalType>true</enableDecimalLogicalType>
                         </configuration>
                     </execution>
                 </executions>

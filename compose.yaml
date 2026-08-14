@@ -205,8 +205,8 @@ services:
 
   market-data-service:
     build:
-      context: ./backend/market-data-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/market-data-service/Dockerfile
 
     container_name: pulsedesk-market-data-service
     restart: unless-stopped
@@ -219,6 +219,8 @@ services:
 
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:19092
+      SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      FINNHUB_API_KEY: ${FINNHUB_API_KEY}
 
     ports:
       - "8081:8081"
@@ -229,8 +231,8 @@ services:
 
   trading-service:
     build:
-      context: ./backend/trading-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/trading-service/Dockerfile
 
     container_name: pulsedesk-trading-service
     restart: unless-stopped
@@ -245,6 +247,7 @@ services:
 
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:19092
+      SCHEMA_REGISTRY_URL: http://schema-registry:8081
 
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/pulsedesk?currentSchema=trading
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-pulsedesk}
@@ -259,8 +262,8 @@ services:
 
   portfolio-service:
     build:
-      context: ./backend/portfolio-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/portfolio-service/Dockerfile
 
     container_name: pulsedesk-portfolio-service
     restart: unless-stopped
@@ -275,6 +278,7 @@ services:
 
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:19092
+      SCHEMA_REGISTRY_URL: http://schema-registry:8081
 
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/pulsedesk?currentSchema=portfolio
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-pulsedesk}

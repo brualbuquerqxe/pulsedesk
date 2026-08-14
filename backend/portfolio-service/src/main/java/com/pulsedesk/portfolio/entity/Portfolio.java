@@ -73,4 +73,12 @@ public class Portfolio {
     public Instant getUpdatedAt() {
         return updatedAt;
     }
+
+    public void debitCashBalance(BigDecimal debitCash) {
+        this.cashBalance = this.cashBalance.subtract(debitCash);
+    }
+
+    public void creditCashBalance(BigDecimal creditCash) {
+        this.cashBalance = this.cashBalance.add(creditCash);
+    }
 }

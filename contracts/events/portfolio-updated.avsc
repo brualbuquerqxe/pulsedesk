@@ -1,0 +1,66 @@
+{
+  "type": "record",
+  "name": "PortfolioUpdated",
+  "namespace": "com.pulsedesk.contracts.events",
+  "fields": [
+    {
+      "name": "eventId",
+      "type": "string"
+    },
+    {
+      "name": "portfolioId",
+      "type": "string"
+    },
+    {
+      "name": "userId",
+      "type": "string"
+    },
+    {
+      "name": "symbol",
+      "type": "string"
+    },
+    {
+      "name": "quantity",
+      "type": "int"
+    },
+    {
+      "name": "averagePrice",
+      "type": [
+        "null",
+        {
+          "type": "bytes",
+          "logicalType": "decimal",
+          "precision": 18,
+          "scale": 6
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "lastPrice",
+      "type": [
+        "null",
+        {
+          "type": "bytes",
+          "logicalType": "decimal",
+          "precision": 18,
+          "scale": 6
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "cashBalance",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 18,
+        "scale": 6
+      }
+    },
+    {
+      "name": "timestamp",
+      "type": "string"
+    }
+  ]
+}

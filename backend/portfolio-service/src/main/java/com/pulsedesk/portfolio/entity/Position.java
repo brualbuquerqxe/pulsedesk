@@ -1,6 +1,7 @@
 package com.pulsedesk.portfolio.entity;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -91,5 +92,33 @@ public class Position {
 
     public BigDecimal getLastPrice() {
         return lastPrice;
+    }
+
+    public void setLastPrice(BigDecimal lastPrice) {
+        this.lastPrice = lastPrice;
+    }
+
+    public void addQuantity(Integer orderQuantity) {
+        this.quantity = this.quantity + orderQuantity;
+    }
+
+    public void removeQuantity(Integer orderQuantity) {
+        this.quantity = this.quantity - orderQuantity;
+    }
+
+    public void setAveragePrice(BigDecimal orderPrice, Integer orderQuantity) {
+
+        BigDecimal currentQuantity = BigDecimal.valueOf(this.quantity);
+        BigDecimal purchasedQuantity = BigDecimal.valueOf(orderQuantity);
+
+        BigDecimal currentTotalValue = this.averagePrice.multiply(currentQuantity);
+
+        BigDecimal purchasedTotalValue = orderPrice.multiply(purchasedQuantity);
+
+        BigDecimal newQuantity = currentQuantity.add(purchasedQuantity);
+
+        this.averagePrice = currentTotalValue
+                .add(purchasedTotalValue)
+                .divide(newQuantity, 6, RoundingMode.HALF_UP);
     }
 }
