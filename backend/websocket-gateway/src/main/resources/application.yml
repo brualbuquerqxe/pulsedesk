@@ -5,6 +5,15 @@ spring:
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
 
+    consumer:
+      group-id: websocket-gateway
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+
+      properties:
+        "[schema.registry.url]": ${SCHEMA_REGISTRY_URL:http://localhost:8085}
+        "[specific.avro.reader]": true
+
 server:
   port: ${SERVER_PORT:8084}
 
