@@ -20,11 +20,7 @@ services:
       - ./infrastructure/postgres/init:/docker-entrypoint-initdb.d:ro
 
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"
-        ]
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -32,7 +28,6 @@ services:
 
     networks:
       - pulsedesk-network
-
 
   kafka-volume-init:
     image: alpine:3.22
@@ -53,7 +48,6 @@ services:
 
     networks:
       - pulsedesk-network
-
 
   kafka:
     image: apache/kafka:4.3.1
@@ -76,18 +70,13 @@ services:
       KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka:29093"
 
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: >
-        CONTROLLER:PLAINTEXT,
-        INTERNAL:PLAINTEXT,
-        EXTERNAL:PLAINTEXT
+        CONTROLLER:PLAINTEXT, INTERNAL:PLAINTEXT, EXTERNAL:PLAINTEXT
 
       KAFKA_LISTENERS: >
-        CONTROLLER://:29093,
-        INTERNAL://:19092,
-        EXTERNAL://:9092
+        CONTROLLER://:29093, INTERNAL://:19092, EXTERNAL://:9092
 
       KAFKA_ADVERTISED_LISTENERS: >
-        INTERNAL://kafka:19092,
-        EXTERNAL://localhost:9092
+        INTERNAL://kafka:19092, EXTERNAL://localhost:9092
 
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
 
@@ -115,11 +104,7 @@ services:
       - kafka-data:/tmp/kraft-combined-logs
 
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list > /dev/null 2>&1"
-        ]
+      test: [ "CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list > /dev/null 2>&1" ]
       interval: 5s
       timeout: 10s
       retries: 15
@@ -157,7 +142,7 @@ services:
       kafka:
         condition: service_healthy
 
-    entrypoint: ["/bin/bash", "-c"]
+    entrypoint: [ "/bin/bash", "-c" ]
 
     command:
       - |
@@ -202,7 +187,6 @@ services:
     networks:
       - pulsedesk-network
 
-
   market-data-service:
     build:
       context: .
@@ -227,7 +211,6 @@ services:
 
     networks:
       - pulsedesk-network
-
 
   trading-service:
     build:
@@ -259,7 +242,6 @@ services:
     networks:
       - pulsedesk-network
 
-
   portfolio-service:
     build:
       context: .
@@ -290,11 +272,10 @@ services:
     networks:
       - pulsedesk-network
 
-
   websocket-gateway:
     build:
-      context: ./backend/websocket-gateway
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/websocket-gateway/Dockerfile
 
     container_name: pulsedesk-websocket-gateway
     restart: unless-stopped
@@ -307,13 +288,13 @@ services:
 
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:19092
+      SCHEMA_REGISTRY_URL: http://schema-registry:8081
 
     ports:
       - "8084:8084"
 
     networks:
       - pulsedesk-network
-
 
   frontend:
     build:
@@ -339,7 +320,6 @@ volumes:
 
   kafka-data:
     name: pulsedesk-kafka-data
-
 
 networks:
 

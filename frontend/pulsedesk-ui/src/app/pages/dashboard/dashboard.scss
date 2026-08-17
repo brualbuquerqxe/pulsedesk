@@ -1,0 +1,46 @@
+.dashboard {
+  display: grid;
+
+  grid-template-columns: 2fr 1fr;
+
+  grid-template-areas:
+    "market order"
+    "portfolio order"
+    "history history";
+
+  gap: 1rem;
+
+  width: 100%;
+}
+
+.market-data {
+  grid-area: market;
+  min-width: 0;
+}
+
+.order-ticket {
+  grid-area: order;
+  min-width: 0;
+}
+
+.portfolio {
+  grid-area: portfolio;
+  min-width: 0;
+}
+
+.order-history {
+  grid-area: history;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+
+    grid-template-areas:
+      "market"
+      "order"
+      "portfolio"
+      "history";
+  }
+}

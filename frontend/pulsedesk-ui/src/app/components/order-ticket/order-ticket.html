@@ -1,0 +1,42 @@
+<p-card header="Order Ticket">
+
+  <div class="order-form">
+
+    <div class="field">
+      <label for="symbol">Ativo</label>
+
+      <input
+        id="symbol"
+        pInputText
+        [(ngModel)]="symbol"
+      />
+    </div>
+
+    <div class="field">
+      <label for="quantity">Quantidade</label>
+
+      <p-inputnumber
+        inputId="quantity"
+        [(ngModel)]="quantity"
+        [min]="1"
+      />
+    </div>
+
+    <div class="field">
+      <label>Lado</label>
+
+      <p-selectbutton
+        [options]="sideOptions"
+        [(ngModel)]="side"
+      />
+    </div>
+
+    <button
+      pButton
+      (click)="submitOrder()">
+      Enviar ordem
+    </button>
+
+  </div>
+
+</p-card>
