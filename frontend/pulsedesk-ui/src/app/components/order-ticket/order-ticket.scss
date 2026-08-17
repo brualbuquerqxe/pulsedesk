@@ -1,0 +1,23 @@
+:host {
+  display: block;
+}
+
+.order-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field input {
+  width: 100%;
+}
+
+button {
+  width: 100%;
+}
