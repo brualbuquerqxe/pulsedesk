@@ -1,5 +1,31 @@
 <p-card header="Order History">
 
-  <p>Order history ainda não implementado.</p>
+  <p-table [value]="orders">
+
+    <ng-template #header>
+      <tr>
+        <th>Symbol</th>
+        <th>Side</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Status</th>
+        <th>Reason</th>
+        <th>Date</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-order>
+      <tr>
+        <td>{{ order.symbol }}</td>
+        <td>{{ order.side }}</td>
+        <td>{{ order.quantity }}</td>
+        <td>{{ order.price !== null ? (order.price | number:'1.2-2') : '-' }}</td>
+        <td>{{ order.status }}</td>
+        <td>{{ order.rejectionReason || '-' }}</td>
+        <td>{{ order.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+      </tr>
+    </ng-template>
+
+  </p-table>
 
 </p-card>

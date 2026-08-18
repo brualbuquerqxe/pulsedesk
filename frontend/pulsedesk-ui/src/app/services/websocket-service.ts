@@ -4,6 +4,7 @@ import { Client } from '@stomp/stompjs';
 import { Subject } from 'rxjs';
 import { MarketDataWebSocketMessage } from '../models/market-data-websocket-message';
 import { PortfolioWebSocketMessage } from '../models/portfolio-websocket-message';
+import { OrderWebSocketMessage } from '../models/order-websocket-message';
 
 @Service()
 export class Websocket {
@@ -16,11 +17,16 @@ export class Websocket {
     });
 
     private marketDataSubject = new Subject<MarketDataWebSocketMessage>();
+
     private portfolioSubject = new Subject<PortfolioWebSocketMessage>();
+
+    private orderSubject = new Subject<OrderWebSocketMessage>();
 
     portfolio$ = this.portfolioSubject.asObservable();
 
     marketData$ = this.marketDataSubject.asObservable();
+
+    order$ = this.orderSubject.asObservable();
 
     constructor() {
         this.client.onConnect = () => {
@@ -36,11 +42,11 @@ export class Websocket {
 
                 this.portfolioSubject.next(data);
             });
-            this.client.subscribe('/topic/portfolio', (message) => {
-                const data: PortfolioWebSocketMessage =
+            this.client.subscribe('/topic/orders', (message) => {
+                const data: OrderWebSocketMessage =
                     JSON.parse(message.body);
 
-                this.portfolioSubject.next(data);
+                this.orderSubject.next(data);
             });
         };
     }
@@ -51,3 +57,4 @@ export class Websocket {
         }
     }
 }
+
