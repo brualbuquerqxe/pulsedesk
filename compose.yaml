@@ -212,6 +212,27 @@ services:
     networks:
       - pulsedesk-network
 
+  analytics-service:
+    build:
+      context: .
+      dockerfile: backend/analytics-service/Dockerfile
+
+    container_name: pulsedesk-analytics-service
+    restart: unless-stopped
+
+    depends_on:
+      kafka:
+        condition: service_healthy
+      kafka-init:
+        condition: service_completed_successfully
+
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:19092
+      SCHEMA_REGISTRY_URL: http://schema-registry:8081
+
+    networks:
+      - pulsedesk-network
+
   trading-service:
     build:
       context: .

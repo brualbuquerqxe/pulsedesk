@@ -1,3 +1,49 @@
 :host {
   display: block;
 }
+
+.market-search {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.market-search input {
+  flex: 1;
+  min-width: 0;
+}
+
+.market-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.symbol {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.price {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.variation {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.positive {
+  color: #16a34a;
+}
+
+.negative {
+  color: #dc2626;
+}
+
+.timestamp {
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  opacity: 0.65;
+}

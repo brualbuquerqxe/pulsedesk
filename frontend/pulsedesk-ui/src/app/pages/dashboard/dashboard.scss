@@ -1,46 +1,66 @@
-.dashboard {
-  display: grid;
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-  grid-template-columns: 2fr 1fr;
-
-  grid-template-areas:
-    "market order"
-    "portfolio order"
-    "history history";
-
-  gap: 1rem;
-
-  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 0.25rem;
 }
 
-.market-data {
-  grid-area: market;
-  min-width: 0;
+.header-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  h1 {
+    margin: 0;
+
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+
+    color: #111827;
+  }
+
+  span {
+    font-size: 0.85rem;
+    color: #6b7280;
+  }
 }
 
-.order-ticket {
-  grid-area: order;
-  min-width: 0;
+.system-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  padding: 0.45rem 0.75rem;
+
+  border: 1px solid #d1fae5;
+  border-radius: 999px;
+
+  background: #ecfdf5;
+
+  font-size: 0.8rem;
+  font-weight: 500;
+
+  color: #065f46;
 }
 
-.portfolio {
-  grid-area: portfolio;
-  min-width: 0;
+.status-dot {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+  background: #10b981;
 }
 
-.order-history {
-  grid-area: history;
-  min-width: 0;
-}
+.system-status.disconnected {
+  border-color: #fee2e2;
+  background: #fef2f2;
+  color: #991b1b;
 
-@media (max-width: 900px) {
-  .dashboard {
-    grid-template-columns: 1fr;
-
-    grid-template-areas:
-      "market"
-      "order"
-      "portfolio"
-      "history";
+  .status-dot {
+    background: #ef4444;
   }
 }

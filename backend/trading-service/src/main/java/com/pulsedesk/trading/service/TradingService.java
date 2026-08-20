@@ -24,6 +24,7 @@ import com.pulsedesk.trading.repository.OrderRepository;
 import com.pulsedesk.contracts.events.RejectedOrderSide;
 import com.pulsedesk.trading.client.PortfolioClient;
 import com.pulsedesk.contracts.events.OrderRejected;
+import org.springframework.web.client.RestClientException;
 
 @Service
 public class TradingService {
@@ -92,7 +93,36 @@ public class TradingService {
 
                 orderEventProducer.publishCreated(eventCreation);
 
-                BigDecimal price = marketDataClient.getMarketData(symbol).price();
+                BigDecimal price;
+
+                try {
+                        price = marketDataClient.getMarketData(symbol).price();
+                } catch (RestClientException exception) {
+
+                        RejectedOrderSide rejectedSide = RejectedOrderSide.valueOf(side.name());
+
+                        String reason = "Unable to retrieve market data for symbol";
+
+                        order.setStatus(OrderStatus.REJECTED);
+                        order.setUpdatedAt(Instant.now());
+                        order.setRejectionReason(reason);
+                        orderRepository.save(order);
+
+                        OrderRejected eventRejected = OrderRejected.newBuilder()
+                                        .setEventId(UUID.randomUUID().toString())
+                                        .setOrderId(orderId.toString())
+                                        .setUserId(request.userId().toString())
+                                        .setSymbol(symbol)
+                                        .setSide(rejectedSide)
+                                        .setReason(reason)
+                                        .setQuantity(request.quantity())
+                                        .setTimestamp(Instant.now().toString())
+                                        .build();
+
+                        orderEventProducer.publishRejected(eventRejected);
+
+                        return;
+                }
 
                 BigDecimal totalPriceOrder = price.multiply(BigDecimal.valueOf(order.getQuantity()));
                 PortfolioResponse portfolio = portfolioClient.getPortfolioResponse(request.userId());

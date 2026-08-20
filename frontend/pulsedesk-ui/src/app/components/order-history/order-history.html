@@ -19,7 +19,10 @@
         <td>{{ order.symbol }}</td>
         <td>{{ order.side }}</td>
         <td>{{ order.quantity }}</td>
-        <td>{{ order.price !== null ? (order.price | number:'1.2-2') : '-' }}</td>
+        <td>{{ order.price != null
+          ? (order.price | currency:'USD':'symbol':'1.2-2':'en-US')
+          : '-'
+          }}</td>
         <td>{{ order.status }}</td>
         <td>{{ order.rejectionReason || '-' }}</td>
         <td>{{ order.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
