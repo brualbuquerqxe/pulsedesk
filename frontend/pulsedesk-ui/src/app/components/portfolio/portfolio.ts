@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
+import { CurrencyPipe } from '@angular/common';
 
 import { PortfolioResponse } from '../../models/portfolio-response';
 import { PortfolioService } from '../../services/portfolio-service';
@@ -9,7 +10,7 @@ import { Websocket } from '../../services/websocket-service';
 
 @Component({
   selector: 'app-portfolio',
-  imports: [CardModule, TableModule],
+  imports: [CurrencyPipe, CardModule, TableModule],
   templateUrl: './portfolio.html',
   styleUrl: './portfolio.scss',
 })
@@ -80,5 +81,41 @@ export class Portfolio implements OnInit {
         }
       ];
     }
+  }
+
+  get positionsValue(): number {
+    if (!this.portfolio) {
+      return 0;
+    }
+
+    return this.portfolio.positions.reduce(
+      (total, position) =>
+        total + position.quantity * position.lastPrice,
+      0
+    );
+  }
+
+  get positionsCost(): number {
+    if (!this.portfolio) {
+      return 0;
+    }
+
+    return this.portfolio.positions.reduce(
+      (total, position) =>
+        total + position.quantity * position.averagePrice,
+      0
+    );
+  }
+
+  get unrealizedPnL(): number {
+    return this.positionsValue - this.positionsCost;
+  }
+
+  get totalEquity(): number {
+    if (!this.portfolio) {
+      return 0;
+    }
+
+    return this.portfolio.cashBalance + this.positionsValue;
   }
 }

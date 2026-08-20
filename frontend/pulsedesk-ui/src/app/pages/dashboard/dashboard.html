@@ -1,3 +1,37 @@
+<div class="dashboard-header">
+
+  <div class="header-title">
+    <span class="page-eyebrow">
+      PULSEDESK
+    </span>
+
+    <h1>
+      Overview
+    </h1>
+
+    <span class="page-description">
+      Monitor market data, portfolio and trading activity.
+    </span>
+  </div>
+
+  <div
+    class="system-status"
+    [class.disconnected]="!isRealtimeConnected"
+  >
+    <span class="status-dot"></span>
+
+    <span>
+      {{
+        isRealtimeConnected
+          ? 'Realtime connected'
+          : 'Realtime disconnected'
+      }}
+    </span>
+  </div>
+
+</div>
+
+
 <div class="dashboard">
 
   <div class="market-data">
@@ -12,8 +46,8 @@
     <app-portfolio />
   </div>
 
-  <div class="order-history">
-    <app-order-history />
+  <div class="analytics">
+    <app-analytics />
   </div>
 
 </div>

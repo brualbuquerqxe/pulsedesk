@@ -1,0 +1,36 @@
+:host {
+  display: block;
+}
+
+.analytics-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.symbol {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.value {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.signal {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.positive {
+  color: #16a34a;
+}
+
+.negative {
+  color: #dc2626;
+}
+
+.neutral {
+  opacity: 0.7;
+}

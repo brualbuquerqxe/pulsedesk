@@ -5,12 +5,12 @@ import { Order } from '../../services/order';
 import { OrderResponse } from '../../models/order-response';
 
 import { TableModule } from 'primeng/table';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import {CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { Websocket } from '../../services/websocket-service';
 
 @Component({
   selector: 'app-order-history',
-  imports: [CardModule, TableModule, DatePipe, DecimalPipe],
+  imports: [CardModule, TableModule, DatePipe, DecimalPipe, CurrencyPipe],
   templateUrl: './order-history.html',
   styleUrl: './order-history.scss',
 })

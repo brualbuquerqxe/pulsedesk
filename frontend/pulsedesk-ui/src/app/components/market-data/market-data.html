@@ -1,11 +1,33 @@
 <p-card header="Market Data">
 
-  <p>Ativo: {{ marketData?.symbol }}</p>
+  <div class="market-search">
+    <input type="text" pInputText [(ngModel)]="searchSymbol" placeholder="Buscar ticker"
+      (keyup.enter)="searchMarketData()" />
 
-  <p>Preço: {{ marketData?.price }}</p>
+    <p-button label="Buscar" icon="pi pi-search" (onClick)="searchMarketData()" />
+  </div>
 
-  <p>Variação: {{ marketData?.percentageChange }}%</p>
+  @if (marketData) {
 
-  <p>Atualizado em: {{ marketData?.timestamp }}</p>
+  <div class="market-content">
+
+    <div class="symbol">
+      {{ marketData.symbol }}
+    </div>
+
+    <div class="price">$ {{ marketData.price }}</div>
+
+    <div class="variation" [class.positive]="marketData.percentageChange >= 0"
+      [class.negative]="marketData.percentageChange < 0">
+      {{ marketData.percentageChange | number:'1.2-2' }}%
+    </div>
+
+    <div class="timestamp">
+      Última atualização:
+      {{ marketData.timestamp | date:'dd/MM/yyyy HH:mm' }} </div>
+
+  </div>
+
+  }
 
 </p-card>

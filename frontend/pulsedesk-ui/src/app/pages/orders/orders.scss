@@ -1,0 +1,88 @@
+.orders-page {
+  width: 100%;
+}
+
+
+/* ==============================
+   Header
+   ============================== */
+
+.orders-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  max-width: 1500px;
+
+  margin: 0 auto;
+  padding: 2rem 1.5rem 0;
+}
+
+.header-title {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.25rem;
+
+  h1 {
+    margin: 0;
+
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+
+    color: #111827;
+  }
+}
+
+.page-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+
+  letter-spacing: 0.12em;
+
+  color: #2563eb;
+}
+
+.page-description {
+  margin-top: 0.2rem;
+
+  font-size: 0.85rem;
+
+  color: #64748b;
+}
+
+
+/* ==============================
+   Content
+   ============================== */
+
+.orders-content {
+  width: 100%;
+  max-width: 1500px;
+
+  margin: 0 auto;
+
+  padding: 1.5rem;
+}
+
+
+/* ==============================
+   Responsive
+   ============================== */
+
+@media (max-width: 1000px) {
+
+  .orders-header {
+    padding: 1.5rem 1rem 0;
+  }
+
+  .header-title h1 {
+    font-size: 1.5rem;
+  }
+
+  .orders-content {
+    padding: 1rem;
+  }
+
+}

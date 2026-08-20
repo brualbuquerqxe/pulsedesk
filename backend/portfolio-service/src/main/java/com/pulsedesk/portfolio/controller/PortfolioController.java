@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pulsedesk.portfolio.dto.PortfolioResponse;
 import com.pulsedesk.portfolio.service.PortfolioService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 // Diz ao Spring que essa classe vai receber requisições HTTP e devolver dados como resposta
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class PortfolioController {
 

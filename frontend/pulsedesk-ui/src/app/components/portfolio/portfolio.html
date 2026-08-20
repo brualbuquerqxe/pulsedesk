@@ -1,6 +1,39 @@
 <p-card header="Portfolio">
 
-  <p>Saldo: {{ portfolio?.cashBalance }}</p>
+  <div class="portfolio-summary">
+
+    <div class="summary-item">
+      <span class="summary-label">Patrimônio total</span>
+      <span class="summary-value">
+        {{ totalEquity | currency:'USD':'symbol':'1.2-2':'en-US' }}
+      </span>
+    </div>
+
+    <div class="summary-item">
+      <span class="summary-label">Saldo disponível</span>
+      <span class="summary-value">
+        {{ portfolio?.cashBalance | currency:'USD':'symbol':'1.2-2':'en-US' }}
+      </span>
+    </div>
+
+    <div class="summary-item">
+      <span class="summary-label">Posições</span>
+      <span class="summary-value">
+        {{ positionsValue | currency:'USD':'symbol':'1.2-2':'en-US' }}
+      </span>
+    </div>
+
+    <div class="summary-item">
+      <span class="summary-label">
+        {{ unrealizedPnL >= 0 ? 'Lucro não realizado' : 'Perda não realizada' }}
+      </span>
+
+      <span class="summary-value" [class.positive]="unrealizedPnL >= 0" [class.negative]="unrealizedPnL < 0">
+        {{ unrealizedPnL | currency:'USD':'symbol':'1.2-2':'en-US' }}
+      </span>
+    </div>
+
+  </div>
 
   <p-table [value]="portfolio?.positions ?? []">
 
@@ -17,8 +50,8 @@
       <tr>
         <td>{{ position.symbol }}</td>
         <td>{{ position.quantity }}</td>
-        <td>{{ position.averagePrice }}</td>
-        <td>{{ position.lastPrice }}</td>
+        <td>{{ position.averagePrice | currency:'USD':'symbol':'1.2-2':'en-US' }}</td>
+        <td>{{ position.lastPrice | currency:'USD':'symbol':'1.2-2':'en-US' }}</td>
       </tr>
     </ng-template>
 
