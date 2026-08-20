@@ -1,22 +1,36 @@
 <div class="dashboard-header">
 
   <div class="header-title">
-    <h1>PulseDesk</h1>
-    <span>Event-Driven Brokerage Workstation</span>
+    <span class="page-eyebrow">
+      PULSEDESK
+    </span>
+
+    <h1>
+      Overview
+    </h1>
+
+    <span class="page-description">
+      Monitor market data, portfolio and trading activity.
+    </span>
   </div>
 
-  <div class="system-status" [class.disconnected]="!isRealtimeConnected">
+  <div
+    class="system-status"
+    [class.disconnected]="!isRealtimeConnected"
+  >
     <span class="status-dot"></span>
 
     <span>
-      {{ isRealtimeConnected
-      ? 'Realtime connected'
-      : 'Realtime disconnected'
+      {{
+        isRealtimeConnected
+          ? 'Realtime connected'
+          : 'Realtime disconnected'
       }}
     </span>
   </div>
 
 </div>
+
 
 <div class="dashboard">
 
@@ -34,10 +48,6 @@
 
   <div class="analytics">
     <app-analytics />
-  </div>
-
-  <div class="order-history">
-    <app-order-history />
   </div>
 
 </div>

@@ -1,16 +1,22 @@
+/* ==============================
+   Header
+   ============================== */
+
 .dashboard-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
 
   max-width: 1500px;
+
   margin: 0 auto;
-  padding: 1.5rem 1.5rem 0.25rem;
+  padding: 2rem 1.5rem 0;
 }
 
 .header-title {
   display: flex;
   flex-direction: column;
+
   gap: 0.25rem;
 
   h1 {
@@ -22,16 +28,34 @@
 
     color: #111827;
   }
-
-  span {
-    font-size: 0.85rem;
-    color: #6b7280;
-  }
 }
+
+.page-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+
+  letter-spacing: 0.12em;
+
+  color: #2563eb;
+}
+
+.page-description {
+  margin-top: 0.2rem;
+
+  font-size: 0.85rem;
+
+  color: #64748b;
+}
+
+
+/* ==============================
+   Realtime Status
+   ============================== */
 
 .system-status {
   display: flex;
   align-items: center;
+
   gap: 0.5rem;
 
   padding: 0.45rem 0.75rem;
@@ -52,15 +76,118 @@
   height: 8px;
 
   border-radius: 50%;
+
   background: #10b981;
 }
 
 .system-status.disconnected {
   border-color: #fee2e2;
+
   background: #fef2f2;
+
   color: #991b1b;
 
   .status-dot {
     background: #ef4444;
   }
+}
+
+
+/* ==============================
+   Dashboard Grid
+   ============================== */
+
+.dashboard {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.7fr)
+    minmax(300px, 1fr);
+
+  grid-template-areas:
+    "market order"
+    "portfolio analytics";
+
+  gap: 1.25rem;
+
+  width: 100%;
+  max-width: 1500px;
+
+  margin: 0 auto;
+
+  padding: 1.5rem;
+
+  align-items: start;
+}
+
+
+/* ==============================
+   Dashboard Areas
+   ============================== */
+
+.market-data {
+  grid-area: market;
+
+  min-width: 0;
+}
+
+.order-ticket {
+  grid-area: order;
+
+  min-width: 0;
+}
+
+.portfolio {
+  grid-area: portfolio;
+
+  min-width: 0;
+}
+
+.analytics {
+  grid-area: analytics;
+
+  min-width: 0;
+}
+
+
+/* ==============================
+   Responsive
+   ============================== */
+
+@media (max-width: 1000px) {
+
+  .dashboard-header {
+    padding: 1.5rem 1rem 0;
+  }
+
+  .header-title h1 {
+    font-size: 1.5rem;
+  }
+
+  .dashboard {
+    grid-template-columns: 1fr;
+
+    grid-template-areas:
+      "market"
+      "order"
+      "portfolio"
+      "analytics";
+
+    padding: 1rem;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .dashboard-header {
+    flex-direction: column;
+
+    gap: 1rem;
+  }
+
+  .system-status {
+    align-self: flex-start;
+  }
+
 }
