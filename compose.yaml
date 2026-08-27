@@ -163,6 +163,7 @@ services:
         for topic in \
           market-data.updated \
           order.created \
+          historical-market-data.updated \
           order.executed \
           order.rejected \
           portfolio.updated
@@ -205,6 +206,7 @@ services:
       KAFKA_BOOTSTRAP_SERVERS: kafka:19092
       SCHEMA_REGISTRY_URL: http://schema-registry:8081
       FINNHUB_API_KEY: ${FINNHUB_API_KEY}
+      ALPHA_VANTAGE_API_KEY: ${ALPHA_VANTAGE_API_KEY}
 
     ports:
       - "8081:8081"

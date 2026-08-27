@@ -10,29 +10,25 @@ import com.pulsedesk.gateway.dto.AnalyticsWebSocketMessage;
 @Component
 public class AnalyticsEventConsumer {
 
-    private final SimpMessagingTemplate simpMessagingTemplate;
+    private final SimpMessagingTemplate messagingTemplate;
 
-    public AnalyticsEventConsumer(SimpMessagingTemplate simpMessagingTemplate) {
-        this.simpMessagingTemplate = simpMessagingTemplate;
+    public AnalyticsEventConsumer(
+            SimpMessagingTemplate messagingTemplate) {
+
+        this.messagingTemplate = messagingTemplate;
     }
 
-    @KafkaListener(
-        topics = "analytics.updated",
-        groupId = "websocket-gateway"
-    )
+    @KafkaListener(topics = "analytics.updated", groupId = "websocket-gateway")
     public void consume(AnalyticsUpdated event) {
 
-        AnalyticsWebSocketMessage message =
-                new AnalyticsWebSocketMessage(
-                        event.getSymbol().toString(),
-                        event.getIndicator().toString(),
-                        event.getValue(),
-                        event.getTimestamp()
-                );
+        AnalyticsWebSocketMessage message = new AnalyticsWebSocketMessage(
+                event.getSymbol().toString(),
+                event.getIndicator().toString(),
+                event.getValue(),
+                event.getTimestamp());
 
-        simpMessagingTemplate.convertAndSend(
+        messagingTemplate.convertAndSend(
                 "/topic/analytics",
-                message
-        );
+                message);
     }
 }
