@@ -1,0 +1,34 @@
+{
+  "type": "record",
+  "name": "HistoricalMarketDataUpdated",
+  "namespace": "com.pulsedesk.contracts.events",
+  "fields": [
+    {
+      "name": "eventId",
+      "type": "string"
+    },
+    {
+      "name": "symbol",
+      "type": "string"
+    },
+    {
+      "name": "closingPrices",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "bytes",
+          "logicalType": "decimal",
+          "precision": 18,
+          "scale": 4
+        }
+      }
+    },
+    {
+      "name": "timestamp",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      }
+    }
+  ]
+}

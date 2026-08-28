@@ -63,6 +63,7 @@ export class Websocket {
             });
 
             this.client.subscribe('/topic/analytics', (message) => {
+
                 const data: AnalyticsWebSocketMessage =
                     JSON.parse(message.body);
 

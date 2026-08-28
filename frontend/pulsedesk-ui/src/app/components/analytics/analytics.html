@@ -2,36 +2,30 @@
 
   @if (analytics) {
 
-    <div class="analytics-content">
+  <div class="analytics-content">
 
-      <div class="symbol">
-        {{ analytics.symbol }}
-      </div>
-
-      <div
-        class="value"
-        [class.positive]="analytics.value > 0"
-        [class.negative]="analytics.value < 0"
-        [class.neutral]="analytics.value === 0"
-      >
-        {{ analytics.value | number:'1.2-2' }}%
-      </div>
-
-      <div class="signal">
-        @if (analytics.value > 0) {
-          Positive momentum
-        } @else if (analytics.value < 0) {
-          Negative momentum
-        } @else {
-          Neutral
-        }
-      </div>
-
+    <div class="symbol">
+      {{ analytics.symbol }}
     </div>
+
+    <div class="value" [class.positive]="analytics.value > 0" [class.negative]="analytics.value < 0"
+      [class.neutral]="analytics.value === 0">
+      {{ analytics.value | number:'1.2-2' }}%
+    </div>
+
+    <div class="signal">
+      20 Days Volatility
+    </div>
+
+    <div class="signal-value">
+      {{ analytics.value | number:'1.2-2' }}%
+    </div>
+
+  </div>
 
   } @else {
 
-    <p>Aguardando dados de mercado...</p>
+  <p>Aguardando dados de mercado...</p>
 
   }
 

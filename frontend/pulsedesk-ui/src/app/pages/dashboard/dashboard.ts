@@ -32,6 +32,8 @@ export class Dashboard implements OnInit {
       this.cdr.markForCheck();
     });
 
+    this.websocket.analytics$.subscribe(analytics => {});
+
     this.websocket.connect();
   }
 }

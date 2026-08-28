@@ -6,26 +6,31 @@ import org.springframework.stereotype.Component;
 import com.pulsedesk.analytics.producer.AnalyticsEventProducer;
 import com.pulsedesk.analytics.service.AnalyticsService;
 import com.pulsedesk.contracts.events.AnalyticsUpdated;
-import com.pulsedesk.contracts.events.MarketDataUpdated;
+import com.pulsedesk.contracts.events.HistoricalMarketDataUpdated;
 
 @Component
-public class MarketDataEventConsumer {
+public class HistoricalMarketDataEventConsumer {
 
     private final AnalyticsService analyticsService;
     private final AnalyticsEventProducer analyticsEventProducer;
 
-    public MarketDataEventConsumer(AnalyticsService analyticsService, AnalyticsEventProducer analyticsEventProducer) {
+    public HistoricalMarketDataEventConsumer(
+            AnalyticsService analyticsService,
+            AnalyticsEventProducer analyticsEventProducer) {
+
         this.analyticsService = analyticsService;
         this.analyticsEventProducer = analyticsEventProducer;
     }
 
-    @KafkaListener(topics = "market-data.updated", groupId = "analytics-service")
-    public void consume(MarketDataUpdated event) {
+    @KafkaListener(
+            topics = "historical-market-data.updated",
+            groupId = "analytics-service"
+    )
+    public void consume(HistoricalMarketDataUpdated event) {
 
-        AnalyticsUpdated analyticsUpdated = analyticsService.analyze(event);
+        AnalyticsUpdated analyticsUpdated =
+                analyticsService.analyze(event);
 
         analyticsEventProducer.publish(analyticsUpdated);
-
     }
-
 }
