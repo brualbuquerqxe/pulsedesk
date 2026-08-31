@@ -5,6 +5,7 @@ import { OrderHistory } from '../../components/order-history/order-history';
 import { OrderTicket } from '../../components/order-ticket/order-ticket';
 import { Portfolio } from '../../components/portfolio/portfolio';
 import { Websocket } from '../../services/websocket-service';
+import { PortfolioHistory } from '../../components/portfolio-history/portfolio-history';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,7 +14,8 @@ import { Websocket } from '../../services/websocket-service';
     Portfolio,
     OrderTicket,
     OrderHistory,
-    Analytics
+    Analytics,
+    PortfolioHistory
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',

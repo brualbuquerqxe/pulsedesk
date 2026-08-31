@@ -16,15 +16,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.pulsedesk.marketdata.model.HistoricalPrice;
+
 @Component
 public class HistoricalMarketDataProvider {
 
     private static final int REQUIRED_PRICES = 21;
 
     private final String apiKey;
+
     private final HttpClient httpClient;
 
-    private final Map<String, List<BigDecimal>> cache =
+    private final Map<String, List<HistoricalPrice>> cache =
             new ConcurrentHashMap<>();
 
     public HistoricalMarketDataProvider(
@@ -36,36 +39,52 @@ public class HistoricalMarketDataProvider {
 
     public List<BigDecimal> getRecentDailyCloses(String symbol) {
 
+        List<HistoricalPrice> history =
+                getDailyCloseHistory(symbol);
+
+        if (history.size() < REQUIRED_PRICES) {
+            throw new IllegalStateException(
+                    "Not enough historical data for " + symbol);
+        }
+
+        return history
+                .subList(
+                        history.size() - REQUIRED_PRICES,
+                        history.size())
+                .stream()
+                .map(HistoricalPrice::closePrice)
+                .toList();
+    }
+
+    public List<HistoricalPrice> getDailyCloseHistory(String symbol) {
+
         String normalizedSymbol =
                 symbol.strip().toUpperCase();
 
         return cache.computeIfAbsent(
                 normalizedSymbol,
-                this::fetchFromAlphaVantage
-        );
+                this::fetchFromAlphaVantage);
     }
 
-    private List<BigDecimal> fetchFromAlphaVantage(String symbol) {
+    private List<HistoricalPrice> fetchFromAlphaVantage(String symbol) {
 
         String encodedSymbol =
                 URLEncoder.encode(
                         symbol,
-                        StandardCharsets.UTF_8
-                );
+                        StandardCharsets.UTF_8);
 
         String encodedApiKey =
                 URLEncoder.encode(
                         apiKey,
-                        StandardCharsets.UTF_8
-                );
+                        StandardCharsets.UTF_8);
 
         String url =
                 "https://www.alphavantage.co/query"
-                + "?function=TIME_SERIES_DAILY"
-                + "&symbol=" + encodedSymbol
-                + "&outputsize=compact"
-                + "&datatype=csv"
-                + "&apikey=" + encodedApiKey;
+                        + "?function=TIME_SERIES_DAILY"
+                        + "&symbol=" + encodedSymbol
+                        + "&outputsize=compact"
+                        + "&datatype=csv"
+                        + "&apikey=" + encodedApiKey;
 
         HttpRequest request =
                 HttpRequest.newBuilder()
@@ -78,49 +97,28 @@ public class HistoricalMarketDataProvider {
             HttpResponse<String> response =
                     httpClient.send(
                             request,
-                            HttpResponse.BodyHandlers.ofString()
-                    );
+                            HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() != 200) {
                 throw new IllegalStateException(
                         "Alpha Vantage request failed. HTTP "
-                                + response.statusCode()
-                );
+                                + response.statusCode());
             }
 
             String body = response.body().strip();
 
             if (!body.startsWith("timestamp,")) {
                 throw new IllegalStateException(
-                        "Alpha Vantage did not return historical data"
-                );
+                        "Alpha Vantage did not return historical data");
             }
 
-            List<DailyClose> dailyCloses =
-                    body.lines()
-                            .skip(1)
-                            .filter(line -> !line.isBlank())
-                            .map(this::parseDailyClose)
-                            .sorted(
-                                    Comparator.comparing(
-                                            DailyClose::date
-                                    )
-                            )
-                            .toList();
-
-            if (dailyCloses.size() < REQUIRED_PRICES) {
-                throw new IllegalStateException(
-                        "Not enough historical data for " + symbol
-                );
-            }
-
-            return dailyCloses
-                    .subList(
-                            dailyCloses.size() - REQUIRED_PRICES,
-                            dailyCloses.size()
-                    )
-                    .stream()
-                    .map(DailyClose::close)
+            return body.lines()
+                    .skip(1)
+                    .filter(line -> !line.isBlank())
+                    .map(this::parseHistoricalPrice)
+                    .sorted(
+                            Comparator.comparing(
+                                    HistoricalPrice::date))
                     .toList();
 
         } catch (InterruptedException exception) {
@@ -129,33 +127,28 @@ public class HistoricalMarketDataProvider {
 
             throw new IllegalStateException(
                     "Alpha Vantage request was interrupted",
-                    exception
-            );
+                    exception);
 
         } catch (Exception exception) {
 
             throw new IllegalStateException(
                     "Error fetching historical data for " + symbol,
-                    exception
-            );
+                    exception);
         }
     }
 
-    private DailyClose parseDailyClose(String line) {
+    private HistoricalPrice parseHistoricalPrice(String line) {
 
         String[] values = line.split(",");
 
         LocalDate date =
                 LocalDate.parse(values[0]);
 
-        BigDecimal close =
+        BigDecimal closePrice =
                 new BigDecimal(values[4]);
 
-        return new DailyClose(date, close);
-    }
-
-    private record DailyClose(
-            LocalDate date,
-            BigDecimal close) {
+        return new HistoricalPrice(
+                date,
+                closePrice);
     }
 }
