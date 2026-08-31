@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.pulsedesk.portfolio.dto.PortfolioHistoryPointResponse;
 
 import com.pulsedesk.portfolio.service.PortfolioHistoryService;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/portfolio")
 public class PortfolioHistoryController {

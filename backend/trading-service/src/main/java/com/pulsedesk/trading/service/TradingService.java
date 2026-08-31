@@ -37,12 +37,16 @@ public class TradingService {
 
         private final PortfolioClient portfolioClient;
 
+        private final MarketHoursService marketHoursService;
+
         public TradingService(OrderEventProducer orderEventProducer, MarketDataClient marketDataClient,
-                        OrderRepository orderRepository, PortfolioClient portfolioClient) {
+                        OrderRepository orderRepository, PortfolioClient portfolioClient,
+                        MarketHoursService marketHoursService) {
                 this.orderEventProducer = orderEventProducer;
                 this.marketDataClient = marketDataClient;
                 this.orderRepository = orderRepository;
                 this.portfolioClient = portfolioClient;
+                this.marketHoursService = marketHoursService;
         }
 
         public void createOrder(CreateOrderRequest request) {
@@ -92,6 +96,34 @@ public class TradingService {
                 orderRepository.save(order);
 
                 orderEventProducer.publishCreated(eventCreation);
+
+                if (!marketHoursService.isMarketOpen()) {
+
+                        RejectedOrderSide rejectedSide = RejectedOrderSide.valueOf(side.name());
+
+                        String reason = "Market is closed";
+
+                        order.setStatus(OrderStatus.REJECTED);
+                        order.setUpdatedAt(Instant.now());
+                        order.setRejectionReason(reason);
+
+                        orderRepository.save(order);
+
+                        OrderRejected eventRejected = OrderRejected.newBuilder()
+                                        .setEventId(UUID.randomUUID().toString())
+                                        .setOrderId(orderId.toString())
+                                        .setUserId(request.userId().toString())
+                                        .setSymbol(symbol)
+                                        .setSide(rejectedSide)
+                                        .setReason(reason)
+                                        .setQuantity(request.quantity())
+                                        .setTimestamp(Instant.now().toString())
+                                        .build();
+
+                        orderEventProducer.publishRejected(eventRejected);
+
+                        return;
+                }
 
                 BigDecimal price;
 
