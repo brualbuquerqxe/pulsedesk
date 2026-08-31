@@ -1,11 +1,7 @@
+
 .orders-page {
   width: 100%;
 }
-
-
-/* ==============================
-   Header
-   ============================== */
 
 .orders-header {
   display: flex;
@@ -31,17 +27,16 @@
     font-weight: 700;
     letter-spacing: -0.03em;
 
-    color: #111827;
+    color: var(--page-title);
   }
 }
 
 .page-eyebrow {
   font-size: 0.7rem;
   font-weight: 700;
-
   letter-spacing: 0.12em;
 
-  color: #2563eb;
+  color: #2563eb;;
 }
 
 .page-description {
@@ -49,30 +44,18 @@
 
   font-size: 0.85rem;
 
-  color: #64748b;
+  color: var(--page-description);
 }
-
-
-/* ==============================
-   Content
-   ============================== */
 
 .orders-content {
   width: 100%;
   max-width: 1500px;
 
   margin: 0 auto;
-
   padding: 1.5rem;
 }
 
-
-/* ==============================
-   Responsive
-   ============================== */
-
 @media (max-width: 1000px) {
-
   .orders-header {
     padding: 1.5rem 1rem 0;
   }
@@ -84,5 +67,4 @@
   .orders-content {
     padding: 1rem;
   }
-
 }

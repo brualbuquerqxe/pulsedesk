@@ -1,4 +1,88 @@
 @import "primeicons/primeicons.css";
+
+:root {
+  /* App */
+  --app-background: #f5f7fa;
+  --app-text: #1f2937;
+  --app-text-muted: #6b7280;
+
+  /* Cards */
+  --card-background: #ffffff;
+  --card-border: #e5e7eb;
+  --card-title: #111827;
+
+  --secondary-background: #f3f4f6;
+  --secondary-text: #374151;
+
+  /* Layout */
+  --layout-background: #f7f9fc;
+  --main-background: #ffffff;
+
+  /* Sidebar - LIGHT */
+  --sidebar-background: #f1f5f9;
+  --sidebar-border: #dbe3ec;
+  --sidebar-bottom-border: #dbe3ec;
+
+  --nav-text: #718096;
+
+  --nav-hover-background: #e8eef8;
+  --nav-hover-text: #3b82f6;
+
+  --nav-active-background: #3b82f6;
+  --nav-active-text: #ffffff;
+
+  --page-eyebrow: #2563eb;
+  --page-description: #64748b;
+
+  /* Status */
+  --status-success-background: #ecfdf5;
+  --status-success-border: #d1fae5;
+  --status-success-text: #065f46;
+  --status-success-dot: #10b981;
+
+  --status-error-background: #fef2f2;
+  --status-error-border: #fee2e2;
+  --status-error-text: #991b1b;
+  --status-error-dot: #ef4444;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --app-background: #18181b;
+    --app-text: #e5e7eb;
+    --app-text-muted: #a1a1aa;
+
+    --card-background: #202022;
+    --card-border: #3f3f46;
+    --card-title: #f4f4f5;
+
+    --secondary-background: #2a2a2e;
+    --secondary-text: #e4e4e7;
+
+    --page-description: #e4e4e7;
+
+    /* Layout */
+    --layout-background: #18181b;
+    --main-background: #18181b;
+
+    /* Sidebar */
+    --sidebar-background: #151517;
+    --sidebar-border: #2c2c30;
+    --sidebar-bottom-border: #3f3f46;
+
+    --nav-text: #a1a1aa;
+    --nav-hover-background: #29292d;
+    --nav-hover-text: #60a5fa;
+
+    --nav-active-background: #3b82f6;
+    --nav-active-text: #ffffff;
+
+    --card-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.3),
+      0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+}
+
 html,
 body {
   margin: 0;
@@ -6,8 +90,9 @@ body {
 }
 
 body {
-  background: #f5f7fa;
-  color: #1f2937;
+  background: var(--app-background);
+  color: var(--app-text);
+
   font-family:
     Inter,
     -apple-system,
@@ -20,16 +105,14 @@ body {
   box-sizing: border-box;
 }
 
-/* ==============================
-   PrimeNG Cards
-   ============================== */
-
 .p-card {
-  border: 1px solid #e5e7eb;
+  background: var(--card-background);
+  color: var(--app-text);
+
+  border: 1px solid var(--card-border);
   border-radius: 12px;
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.04),
-    0 4px 12px rgba(0, 0, 0, 0.03);
+
+  box-shadow: var(--card-shadow);
 
   overflow: hidden;
 }
@@ -44,7 +127,7 @@ body {
   font-size: 1rem;
   font-weight: 600;
 
-  color: #111827;
+  color: var(--card-title);
 }
 
 .p-card .p-card-content {

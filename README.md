@@ -1,4 +1,7 @@
-# PulseDesk
+<h1>
+  <img src="frontend/pulsedesk-ui/public/pulsedesk-logo.png" width="45" align="center" alt="PulseDesk Logo">
+  PulseDesk
+</h1>
 
 O **PulseDesk** é uma aplicação de corretora desenvolvida com arquitetura baseada em microsserviços e eventos.
 

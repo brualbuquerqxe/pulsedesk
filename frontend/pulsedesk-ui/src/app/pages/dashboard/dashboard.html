@@ -6,25 +6,22 @@
     </span>
 
     <h1>
-      Overview
+      Visão Geral
     </h1>
 
     <span class="page-description">
-      Monitor market data, portfolio and trading activity.
+      Monitore dados de mercado, portfólio e atividades de negociação.
     </span>
   </div>
 
-  <div
-    class="system-status"
-    [class.disconnected]="!isRealtimeConnected"
-  >
+  <div class="system-status" [class.disconnected]="!isRealtimeConnected">
     <span class="status-dot"></span>
 
     <span>
       {{
-        isRealtimeConnected
-          ? 'Realtime connected'
-          : 'Realtime disconnected'
+      isRealtimeConnected
+      ? 'Conectado em tempo real'
+      : 'Desconectado em tempo real'
       }}
     </span>
   </div>

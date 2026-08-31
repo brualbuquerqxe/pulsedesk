@@ -13,7 +13,7 @@ import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-market-data',
-  imports: [CurrencyPipe, DatePipe, DecimalPipe, CardModule, FormsModule, InputTextModule, ButtonModule],
+  imports: [DatePipe, DecimalPipe, CardModule, FormsModule, InputTextModule, ButtonModule],
   templateUrl: './market-data.html',
   styleUrl: './market-data.scss',
 })
