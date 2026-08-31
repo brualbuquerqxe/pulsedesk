@@ -2,13 +2,8 @@
   display: flex;
   min-height: 100vh;
 
-  background: #f7f9fc;
+  background: var(--layout-background);
 }
-
-
-/* ==============================
-   Sidebar
-   ============================== */
 
 .sidebar {
   position: sticky;
@@ -25,9 +20,9 @@
 
   padding: 1rem 0;
 
-  background: #f1f5f9;
+  background: var(--sidebar-background);
 
-  border-right: 1px solid #edf1f5;
+  border-right: 1px solid var(--sidebar-border);
 }
 
 .sidebar-logo {
@@ -54,11 +49,6 @@
   }
 }
 
-
-/* ==============================
-   Navigation
-   ============================== */
-
 .sidebar-nav {
   display: flex;
   flex-direction: column;
@@ -84,7 +74,7 @@
 
   background: transparent;
 
-  color: #718096;
+  color: var(--nav-text);
 
   text-decoration: none;
 
@@ -105,35 +95,27 @@
   }
 
   &:hover {
-    background: #e8eef8;
-    color: #3b82f6;
+    background: var(--nav-hover-background);
+    color: var(--nav-hover-text);
   }
 }
 
-
-/* Página ativa */
-
 .nav-item.active {
-  background: #3b82f6;
+  background: var(--nav-active-background);
 
-  color: #ffffff;
+  color: var(--nav-active-text);
 
   box-shadow: none;
 
   .pi {
-    color: #ffffff;
+    color: var(--nav-active-text);
   }
 
   &:hover {
-    background: #3b82f6;
-    color: #ffffff;
+    background: var(--nav-active-background);
+    color: var(--nav-active-text);
   }
 }
-
-
-/* ==============================
-   Bottom
-   ============================== */
 
 .sidebar-bottom {
   display: flex;
@@ -144,13 +126,8 @@
   margin-top: auto;
   padding-top: 1rem;
 
-  border-top: 1px solid #dbe3ec;
+  border-top: 1px solid var(--sidebar-bottom-border);
 }
-
-
-/* ==============================
-   Main
-   ============================== */
 
 .main-content {
   flex: 1;
@@ -158,7 +135,7 @@
   min-width: 0;
   min-height: 100vh;
 
-  background: #ffffff;
+  background: var(--main-background);
 }
 
 
@@ -167,9 +144,7 @@
    ============================== */
 
 @media (max-width: 700px) {
-
   .sidebar {
     width: 64px;
   }
-
 }

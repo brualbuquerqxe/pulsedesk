@@ -7,53 +7,58 @@
   height: 100%;
   box-sizing: border-box;
 
-  background: #ffffff;
-  padding: 20px;
-}
+  background: var(--card-background);
 
-.chart-container {
-  width: 100%;
-  height: 280px;
-}
-
-.portfolio-history-card {
-  background: #ffffff;
   border-radius: 12px;
   padding: 20px;
+
+  color: var(--card-background);
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+
   margin-bottom: 16px;
 }
 
 .eyebrow {
   display: block;
+
+  margin-bottom: 0px;
+
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.08em;
-  color: #6b7280;
-  margin-bottom: 4px;
+
+  color: var(--app-text-muted);
 }
 
 h3 {
   margin: 0;
+
   font-size: 18px;
   font-weight: 600;
-  color: #111827;
+
+  color: var(--card-title);
 }
 
 .period {
   padding: 5px 9px;
-  background: #f3f4f6;
-  color: #374151;
+
+  background: var(--secondary-background);
+  color: var(--secondary-text);
+
   font-size: 12px;
   font-weight: 600;
+
+  border-radius: 6px;
 }
 
 .chart-container {
   width: 100%;
   height: 280px;
+
+  background: transparent;
 }
