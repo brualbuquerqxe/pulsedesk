@@ -13,7 +13,6 @@ import { PortfolioHistory } from '../../components/portfolio-history/portfolio-h
     MarketData,
     Portfolio,
     OrderTicket,
-    OrderHistory,
     Analytics,
     PortfolioHistory
   ],

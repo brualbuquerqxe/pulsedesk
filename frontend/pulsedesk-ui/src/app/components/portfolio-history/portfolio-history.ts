@@ -1,6 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
 import { ChartData, ChartOptions } from 'chart.js';
+import { CardModule } from 'primeng/card';
 
 import {
     PortfolioHistoryService
@@ -9,12 +10,15 @@ import {
 @Component({
     selector: 'app-portfolio-history',
     imports: [
-        ChartModule
+        ChartModule,
+        CardModule
     ],
     templateUrl: './portfolio-history.html',
     styleUrl: './portfolio-history.scss',
 })
 export class PortfolioHistory implements OnInit {
+
+    private cdr = inject(ChangeDetectorRef);
 
     private portfolioHistoryService =
         inject(PortfolioHistoryService);
@@ -89,6 +93,8 @@ export class PortfolioHistory implements OnInit {
                         }
                     ]
                 };
+
+                this.cdr.detectChanges();
             });
     }
 }
