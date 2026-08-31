@@ -1,5 +1,21 @@
 :host {
   display: block;
+  height: 100%;
+}
+
+p-card {
+  display: block;
+  height: 100%;
+}
+
+:host ::ng-deep .p-card {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+:host ::ng-deep .p-card-body {
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .portfolio-summary {
