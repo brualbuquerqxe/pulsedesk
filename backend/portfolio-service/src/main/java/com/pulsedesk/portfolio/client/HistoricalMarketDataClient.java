@@ -6,29 +6,28 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
-import com.pulsedesk.portfolio.dto.HistoricalPriceResponse;
+import com.pulsedesk.portfolio.dto.HistoricalPrice;
 
 @Component
 public class HistoricalMarketDataClient {
 
-    private final RestClient restClient;
+        private final RestClient restClient;
 
-    public HistoricalMarketDataClient(RestClient.Builder builder) {
+        public HistoricalMarketDataClient(RestClient.Builder builder) {
 
-        this.restClient = builder
-                .baseUrl("http://market-data-service:8081")
-                .build();
-    }
+                this.restClient = builder
+                                .baseUrl("http://market-data-service:8081")
+                                .build();
+        }
 
-    public List<HistoricalPriceResponse> getHistoricalPrices(
-            String symbol) {
+        public List<HistoricalPrice> getHistoricalPrices(
+                        String symbol) {
 
-        return restClient.get()
-                .uri("/api/market-data/{symbol}/history", symbol)
-                .retrieve()
-                .body(
-                        new ParameterizedTypeReference<
-                                List<HistoricalPriceResponse>>() {
-                        });
-    }
+                return restClient.get()
+                                .uri("/api/market-data/{symbol}/history", symbol)
+                                .retrieve()
+                                .body(
+                                                new ParameterizedTypeReference<List<HistoricalPrice>>() {
+                                                });
+        }
 }

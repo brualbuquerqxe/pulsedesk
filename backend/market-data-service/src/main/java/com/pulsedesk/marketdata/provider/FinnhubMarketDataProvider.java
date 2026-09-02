@@ -8,13 +8,12 @@ import java.math.BigDecimal;
 import java.time.Instant;
 
 import com.pulsedesk.marketdata.dto.MarketDataResponse;
-import com.pulsedesk.marketdata.provider.dto.FinnhubQuoteResponse;
 
 @Component
 public class FinnhubMarketDataProvider implements ExternalMarketDataProvider {
 
         private final String apiKey;
-        // Como vamos estar acessando as info no finnhub
+
         private final RestClient restClient;
 
         @Override

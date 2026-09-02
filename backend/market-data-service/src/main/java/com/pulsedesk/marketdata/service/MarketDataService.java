@@ -2,38 +2,35 @@ package com.pulsedesk.marketdata.service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.pulsedesk.marketdata.dto.HistoricalPriceResponse;
 import com.pulsedesk.marketdata.dto.MarketDataResponse;
-import com.pulsedesk.marketdata.model.HistoricalPrice;
+
 import com.pulsedesk.marketdata.producer.HistoricalMarketDataEventProducer;
 import com.pulsedesk.marketdata.producer.MarketDataEventProducer;
+
 import com.pulsedesk.marketdata.provider.ExternalMarketDataProvider;
-import com.pulsedesk.marketdata.provider.HistoricalMarketDataProvider;
+import com.pulsedesk.marketdata.provider.AlphaVantageHistoricalMarketDataProvider;
 
 @Service
 public class MarketDataService {
 
     private final ExternalMarketDataProvider marketDataProvider;
-    private final HistoricalMarketDataProvider historicalMarketDataProvider;
+    private final AlphaVantageHistoricalMarketDataProvider alphaVantageHistoricalMarketDataProvider;
 
     private final MarketDataEventProducer eventProducer;
     private final HistoricalMarketDataEventProducer historicalEventProducer;
 
-    private final Set<String> monitoredSymbols = ConcurrentHashMap.newKeySet();
-
     public MarketDataService(
             ExternalMarketDataProvider marketDataProvider,
-            HistoricalMarketDataProvider historicalMarketDataProvider,
+            AlphaVantageHistoricalMarketDataProvider alphaVantageHistoricalMarketDataProvider,
             MarketDataEventProducer eventProducer,
             HistoricalMarketDataEventProducer historicalEventProducer) {
 
         this.marketDataProvider = marketDataProvider;
-        this.historicalMarketDataProvider = historicalMarketDataProvider;
+        this.alphaVantageHistoricalMarketDataProvider = alphaVantageHistoricalMarketDataProvider;
         this.eventProducer = eventProducer;
         this.historicalEventProducer = historicalEventProducer;
     }
@@ -42,32 +39,25 @@ public class MarketDataService {
 
         String normalizedSymbol = normalizeSymbol(symbol);
 
-        monitoredSymbols.add(normalizedSymbol);
-
         publishHistoricalData(normalizedSymbol);
 
         return fetchAndPublish(normalizedSymbol);
     }
 
-    public List<HistoricalPrice> getHistoricalPrices(String symbol) {
+    public List<HistoricalPriceResponse> getHistoricalPrices(String symbol) {
 
-        String normalizedSymbol = symbol.strip().toUpperCase();
-
-        return historicalMarketDataProvider
-                .getDailyCloseHistory(normalizedSymbol);
-    }
-
-    @Scheduled(fixedDelayString = "${market-data.refresh-ms:10000}")
-    public void refreshMonitoredSymbols() {
-
-        for (String symbol : monitoredSymbols) {
-            fetchAndPublish(symbol);
-        }
+        return alphaVantageHistoricalMarketDataProvider
+                .getDailyCloseHistory(symbol)
+                .stream()
+                .map(price -> new HistoricalPriceResponse(
+                        price.date(),
+                        price.closePrice()))
+                .toList();
     }
 
     private void publishHistoricalData(String symbol) {
 
-        List<BigDecimal> closingPrices = historicalMarketDataProvider
+        List<BigDecimal> closingPrices = alphaVantageHistoricalMarketDataProvider
                 .getRecentDailyCloses(symbol);
 
         historicalEventProducer.publish(
