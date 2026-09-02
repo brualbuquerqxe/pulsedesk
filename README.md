@@ -35,6 +35,7 @@ A plataforma permite consultar dados de mercado, enviar ordens de compra e venda
 ### Market Data
 
 * Finnhub API
+* Alpha Vantage API
 
 ---
 
