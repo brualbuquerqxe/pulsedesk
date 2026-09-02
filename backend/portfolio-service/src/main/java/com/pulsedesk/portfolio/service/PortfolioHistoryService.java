@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 import com.pulsedesk.portfolio.client.HistoricalMarketDataClient;
 import com.pulsedesk.portfolio.client.TradingClient;
-import com.pulsedesk.portfolio.dto.HistoricalPriceResponse;
+import com.pulsedesk.portfolio.dto.HistoricalPrice;
 import com.pulsedesk.portfolio.dto.OrderResponse;
 import com.pulsedesk.portfolio.dto.PortfolioHistoryPointResponse;
 import com.pulsedesk.portfolio.entity.DailyPortfolioSnapshot;
@@ -31,276 +31,276 @@ import com.pulsedesk.portfolio.repository.PositionRepository;
 @Service
 public class PortfolioHistoryService {
 
-    private final TradingClient tradingClient;
-    private final HistoricalMarketDataClient historicalMarketDataClient;
-    private final PortfolioRepository portfolioRepository;
-    private final DailyPortfolioSnapshotRepository dailyPortfolioSnapshotRepository;
-    private final PositionRepository positionRepository;
+        private final TradingClient tradingClient;
+        private final HistoricalMarketDataClient historicalMarketDataClient;
+        private final PortfolioRepository portfolioRepository;
+        private final DailyPortfolioSnapshotRepository dailyPortfolioSnapshotRepository;
+        private final PositionRepository positionRepository;
 
-    public PortfolioHistoryService(
-            TradingClient tradingClient,
-            HistoricalMarketDataClient historicalMarketDataClient,
-            PortfolioRepository portfolioRepository,
-            DailyPortfolioSnapshotRepository dailyPortfolioSnapshotRepository,
-            PositionRepository positionRepository) {
+        public PortfolioHistoryService(
+                        TradingClient tradingClient,
+                        HistoricalMarketDataClient historicalMarketDataClient,
+                        PortfolioRepository portfolioRepository,
+                        DailyPortfolioSnapshotRepository dailyPortfolioSnapshotRepository,
+                        PositionRepository positionRepository) {
 
-        this.tradingClient = tradingClient;
-        this.historicalMarketDataClient = historicalMarketDataClient;
-        this.portfolioRepository = portfolioRepository;
-        this.dailyPortfolioSnapshotRepository = dailyPortfolioSnapshotRepository;
-        this.positionRepository = positionRepository;
-    }
-
-    public void reconstructPortfolioHistory(UUID userId) {
-
-        Portfolio portfolio = portfolioRepository
-                .findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Portfolio not found for user " + userId));
-
-        List<Position> currentPositions = positionRepository.findByPortfolioId(portfolio.getId());
-
-        Instant reliableStartInstant = currentPositions.stream()
-                .map(Position::getCreatedAt)
-                .max(Instant::compareTo)
-                .orElseThrow(() -> new IllegalStateException(
-                        "Cannot determine reliable portfolio history start"));
-
-        LocalDate reliableStartDate = reliableStartInstant
-                .atZone(ZoneId.of("America/New_York"))
-                .toLocalDate();
-
-        List<OrderResponse> orders = tradingClient.getOrderResponses(userId);
-
-        List<OrderResponse> executedOrders = orders.stream()
-                .filter(order -> "EXECUTED".equals(order.status()))
-                .sorted(Comparator.comparing(OrderResponse::updatedAt))
-                .toList();
-
-        List<OrderResponse> relevantExecutedOrders = executedOrders.stream()
-                .filter(order -> !getExecutionDate(order).isBefore(reliableStartDate))
-                .toList();
-
-        Set<String> symbols = new HashSet<>();
-
-        symbols.addAll(
-                relevantExecutedOrders.stream()
-                        .map(OrderResponse::symbol)
-                        .collect(Collectors.toSet()));
-
-        symbols.addAll(
-                currentPositions.stream()
-                        .map(Position::getSymbol)
-                        .collect(Collectors.toSet()));
-
-        Map<String, Map<LocalDate, BigDecimal>> historicalPrices = new HashMap<>();
-
-        for (String symbol : symbols) {
-
-            List<HistoricalPriceResponse> history = historicalMarketDataClient.getHistoricalPrices(symbol);
-
-            Map<LocalDate, BigDecimal> pricesByDate = history.stream()
-                    .collect(Collectors.toMap(
-                            HistoricalPriceResponse::date,
-                            HistoricalPriceResponse::closePrice));
-
-            historicalPrices.put(symbol, pricesByDate);
-
-            waitBeforeNextMarketDataRequest();
+                this.tradingClient = tradingClient;
+                this.historicalMarketDataClient = historicalMarketDataClient;
+                this.portfolioRepository = portfolioRepository;
+                this.dailyPortfolioSnapshotRepository = dailyPortfolioSnapshotRepository;
+                this.positionRepository = positionRepository;
         }
 
-        LocalDate endDate = LocalDate.now(ZoneId.of("America/New_York"));
+        public void reconstructPortfolioHistory(UUID userId) {
 
-        LocalDate oneMonthAgo = endDate.minusMonths(1);
+                Portfolio portfolio = portfolioRepository
+                                .findByUserId(userId)
+                                .orElseThrow(() -> new IllegalArgumentException(
+                                                "Portfolio not found for user " + userId));
 
-        LocalDate startDate = reliableStartDate.isAfter(oneMonthAgo)
-                ? reliableStartDate
-                : oneMonthAgo;
+                List<Position> currentPositions = positionRepository.findByPortfolioId(portfolio.getId());
 
-        TreeSet<LocalDate> tradingDates = new TreeSet<>();
+                Instant reliableStartInstant = currentPositions.stream()
+                                .map(Position::getCreatedAt)
+                                .max(Instant::compareTo)
+                                .orElseThrow(() -> new IllegalStateException(
+                                                "Cannot determine reliable portfolio history start"));
 
-        for (Map<LocalDate, BigDecimal> pricesByDate : historicalPrices.values()) {
+                LocalDate reliableStartDate = reliableStartInstant
+                                .atZone(ZoneId.of("America/New_York"))
+                                .toLocalDate();
 
-            for (LocalDate date : pricesByDate.keySet()) {
+                List<OrderResponse> orders = tradingClient.getOrderResponses(userId);
 
-                if (!date.isBefore(startDate)
-                        && !date.isAfter(endDate)) {
+                List<OrderResponse> executedOrders = orders.stream()
+                                .filter(order -> "EXECUTED".equals(order.status()))
+                                .sorted(Comparator.comparing(OrderResponse::updatedAt))
+                                .toList();
 
-                    tradingDates.add(date);
-                }
-            }
-        }
+                List<OrderResponse> relevantExecutedOrders = executedOrders.stream()
+                                .filter(order -> !getExecutionDate(order).isBefore(reliableStartDate))
+                                .toList();
 
-        BigDecimal cashBalance = portfolio.getCashBalance();
+                Set<String> symbols = new HashSet<>();
 
-        Map<String, Long> positions = new HashMap<>();
+                symbols.addAll(
+                                relevantExecutedOrders.stream()
+                                                .map(OrderResponse::symbol)
+                                                .collect(Collectors.toSet()));
 
-        for (Position position : currentPositions) {
+                symbols.addAll(
+                                currentPositions.stream()
+                                                .map(Position::getSymbol)
+                                                .collect(Collectors.toSet()));
 
-            positions.put(
-                    position.getSymbol(),
-                    Long.valueOf(position.getQuantity()));
-        }
+                Map<String, Map<LocalDate, BigDecimal>> historicalPrices = new HashMap<>();
 
-        int orderIndex = relevantExecutedOrders.size() - 1;
+                for (String symbol : symbols) {
 
-        for (LocalDate date : tradingDates.descendingSet()) {
+                        List<HistoricalPrice> history = historicalMarketDataClient.getHistoricalPrices(symbol);
 
-            while (orderIndex >= 0
-                    && getExecutionDate(
-                            relevantExecutedOrders.get(orderIndex))
-                            .isAfter(date)) {
+                        Map<LocalDate, BigDecimal> pricesByDate = history.stream()
+                                        .collect(Collectors.toMap(
+                                                        HistoricalPrice::date,
+                                                        HistoricalPrice::closePrice));
 
-                OrderResponse order = relevantExecutedOrders.get(orderIndex);
+                        historicalPrices.put(symbol, pricesByDate);
 
-                BigDecimal totalOrderValue = order.price().multiply(
-                        BigDecimal.valueOf(
-                                order.quantity()));
-
-                if ("BUY".equals(order.side())) {
-
-                    cashBalance = cashBalance.add(totalOrderValue);
-
-                    positions.merge(
-                            order.symbol(),
-                            -order.quantity(),
-                            Long::sum);
-
-                } else if ("SELL".equals(order.side())) {
-
-                    cashBalance = cashBalance.subtract(totalOrderValue);
-
-                    positions.merge(
-                            order.symbol(),
-                            order.quantity(),
-                            Long::sum);
+                        waitBeforeNextMarketDataRequest();
                 }
 
-                Long resultingQuantity = positions.get(order.symbol());
+                LocalDate endDate = LocalDate.now(ZoneId.of("America/New_York"));
 
-                if (resultingQuantity != null
-                        && resultingQuantity == 0L) {
+                LocalDate oneMonthAgo = endDate.minusMonths(1);
 
-                    positions.remove(order.symbol());
+                LocalDate startDate = reliableStartDate.isAfter(oneMonthAgo)
+                                ? reliableStartDate
+                                : oneMonthAgo;
+
+                TreeSet<LocalDate> tradingDates = new TreeSet<>();
+
+                for (Map<LocalDate, BigDecimal> pricesByDate : historicalPrices.values()) {
+
+                        for (LocalDate date : pricesByDate.keySet()) {
+
+                                if (!date.isBefore(startDate)
+                                                && !date.isAfter(endDate)) {
+
+                                        tradingDates.add(date);
+                                }
+                        }
                 }
 
-                orderIndex--;
-            }
+                BigDecimal cashBalance = portfolio.getCashBalance();
 
-            BigDecimal positionsValue = BigDecimal.ZERO;
+                Map<String, Long> positions = new HashMap<>();
 
-            for (Map.Entry<String, Long> position : positions.entrySet()) {
+                for (Position position : currentPositions) {
 
-                String symbol = position.getKey();
-
-                Long quantity = position.getValue();
-
-                if (quantity == 0) {
-                    continue;
+                        positions.put(
+                                        position.getSymbol(),
+                                        Long.valueOf(position.getQuantity()));
                 }
 
-                if (quantity < 0) {
-                    throw new IllegalStateException(
-                            "Cannot reconstruct portfolio history: "
-                                    + "negative quantity for "
-                                    + symbol
-                                    + " on "
-                                    + date);
+                int orderIndex = relevantExecutedOrders.size() - 1;
+
+                for (LocalDate date : tradingDates.descendingSet()) {
+
+                        while (orderIndex >= 0
+                                        && getExecutionDate(
+                                                        relevantExecutedOrders.get(orderIndex))
+                                                        .isAfter(date)) {
+
+                                OrderResponse order = relevantExecutedOrders.get(orderIndex);
+
+                                BigDecimal totalOrderValue = order.price().multiply(
+                                                BigDecimal.valueOf(
+                                                                order.quantity()));
+
+                                if ("BUY".equals(order.side())) {
+
+                                        cashBalance = cashBalance.add(totalOrderValue);
+
+                                        positions.merge(
+                                                        order.symbol(),
+                                                        -order.quantity(),
+                                                        Long::sum);
+
+                                } else if ("SELL".equals(order.side())) {
+
+                                        cashBalance = cashBalance.subtract(totalOrderValue);
+
+                                        positions.merge(
+                                                        order.symbol(),
+                                                        order.quantity(),
+                                                        Long::sum);
+                                }
+
+                                Long resultingQuantity = positions.get(order.symbol());
+
+                                if (resultingQuantity != null
+                                                && resultingQuantity == 0L) {
+
+                                        positions.remove(order.symbol());
+                                }
+
+                                orderIndex--;
+                        }
+
+                        BigDecimal positionsValue = BigDecimal.ZERO;
+
+                        for (Map.Entry<String, Long> position : positions.entrySet()) {
+
+                                String symbol = position.getKey();
+
+                                Long quantity = position.getValue();
+
+                                if (quantity == 0) {
+                                        continue;
+                                }
+
+                                if (quantity < 0) {
+                                        throw new IllegalStateException(
+                                                        "Cannot reconstruct portfolio history: "
+                                                                        + "negative quantity for "
+                                                                        + symbol
+                                                                        + " on "
+                                                                        + date);
+                                }
+
+                                BigDecimal closePrice = getClosePriceOnOrBefore(
+                                                historicalPrices.get(symbol),
+                                                date,
+                                                symbol);
+
+                                BigDecimal marketValue = closePrice.multiply(
+                                                BigDecimal.valueOf(quantity));
+
+                                positionsValue = positionsValue.add(marketValue);
+                        }
+
+                        BigDecimal totalValue = cashBalance.add(positionsValue);
+
+                        boolean snapshotAlreadyExists = dailyPortfolioSnapshotRepository
+                                        .findByPortfolioIdAndSnapshotDate(
+                                                        portfolio.getId(),
+                                                        date)
+                                        .isPresent();
+
+                        if (!snapshotAlreadyExists) {
+
+                                DailyPortfolioSnapshot snapshot = new DailyPortfolioSnapshot(
+                                                UUID.randomUUID(),
+                                                portfolio,
+                                                date,
+                                                cashBalance,
+                                                totalValue,
+                                                Instant.now());
+
+                                dailyPortfolioSnapshotRepository.save(snapshot);
+                        }
+                }
+        }
+
+        private BigDecimal getClosePriceOnOrBefore(
+                        Map<LocalDate, BigDecimal> pricesByDate,
+                        LocalDate date,
+                        String symbol) {
+
+                BigDecimal exactPrice = pricesByDate.get(date);
+
+                if (exactPrice != null) {
+                        return exactPrice;
                 }
 
-                BigDecimal closePrice = getClosePriceOnOrBefore(
-                        historicalPrices.get(symbol),
-                        date,
-                        symbol);
-
-                BigDecimal marketValue = closePrice.multiply(
-                        BigDecimal.valueOf(quantity));
-
-                positionsValue = positionsValue.add(marketValue);
-            }
-
-            BigDecimal totalValue = cashBalance.add(positionsValue);
-
-            boolean snapshotAlreadyExists = dailyPortfolioSnapshotRepository
-                    .findByPortfolioIdAndSnapshotDate(
-                            portfolio.getId(),
-                            date)
-                    .isPresent();
-
-            if (!snapshotAlreadyExists) {
-
-                DailyPortfolioSnapshot snapshot = new DailyPortfolioSnapshot(
-                        UUID.randomUUID(),
-                        portfolio,
-                        date,
-                        cashBalance,
-                        totalValue,
-                        Instant.now());
-
-                dailyPortfolioSnapshotRepository.save(snapshot);
-            }
-        }
-    }
-
-    private BigDecimal getClosePriceOnOrBefore(
-            Map<LocalDate, BigDecimal> pricesByDate,
-            LocalDate date,
-            String symbol) {
-
-        BigDecimal exactPrice = pricesByDate.get(date);
-
-        if (exactPrice != null) {
-            return exactPrice;
+                return pricesByDate.entrySet().stream()
+                                .filter(entry -> !entry.getKey().isAfter(date))
+                                .max(Map.Entry.comparingByKey())
+                                .map(Map.Entry::getValue)
+                                .orElseThrow(() -> new IllegalStateException(
+                                                "No historical price available for "
+                                                                + symbol
+                                                                + " on or before "
+                                                                + date));
         }
 
-        return pricesByDate.entrySet().stream()
-                .filter(entry -> !entry.getKey().isAfter(date))
-                .max(Map.Entry.comparingByKey())
-                .map(Map.Entry::getValue)
-                .orElseThrow(() -> new IllegalStateException(
-                        "No historical price available for "
-                                + symbol
-                                + " on or before "
-                                + date));
-    }
+        private LocalDate getExecutionDate(
+                        OrderResponse order) {
 
-    private LocalDate getExecutionDate(
-            OrderResponse order) {
-
-        return order.updatedAt()
-                .atZone(ZoneId.of("America/New_York"))
-                .toLocalDate();
-    }
-
-    private void waitBeforeNextMarketDataRequest() {
-
-        try {
-
-            Thread.sleep(1500);
-
-        } catch (InterruptedException e) {
-
-            Thread.currentThread().interrupt();
-
-            throw new IllegalStateException(
-                    "Interrupted while waiting for market data",
-                    e);
+                return order.updatedAt()
+                                .atZone(ZoneId.of("America/New_York"))
+                                .toLocalDate();
         }
-    }
 
-    public List<PortfolioHistoryPointResponse> getPortfolioHistory(UUID userId) {
+        private void waitBeforeNextMarketDataRequest() {
 
-        Portfolio portfolio = portfolioRepository
-                .findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Portfolio not found for user " + userId));
+                try {
 
-        return dailyPortfolioSnapshotRepository
-                .findByPortfolioIdOrderBySnapshotDateAsc(portfolio.getId())
-                .stream()
-                .map(snapshot -> new PortfolioHistoryPointResponse(
-                        snapshot.getSnapshotDate(),
-                        snapshot.getTotalValue()))
-                .toList();
-    }
+                        Thread.sleep(1500);
+
+                } catch (InterruptedException e) {
+
+                        Thread.currentThread().interrupt();
+
+                        throw new IllegalStateException(
+                                        "Interrupted while waiting for market data",
+                                        e);
+                }
+        }
+
+        public List<PortfolioHistoryPointResponse> getPortfolioHistory(UUID userId) {
+
+                Portfolio portfolio = portfolioRepository
+                                .findByUserId(userId)
+                                .orElseThrow(() -> new IllegalArgumentException(
+                                                "Portfolio not found for user " + userId));
+
+                return dailyPortfolioSnapshotRepository
+                                .findByPortfolioIdOrderBySnapshotDateAsc(portfolio.getId())
+                                .stream()
+                                .map(snapshot -> new PortfolioHistoryPointResponse(
+                                                snapshot.getSnapshotDate(),
+                                                snapshot.getTotalValue()))
+                                .toList();
+        }
 }

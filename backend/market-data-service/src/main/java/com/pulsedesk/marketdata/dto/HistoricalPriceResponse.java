@@ -1,4 +1,4 @@
-package com.pulsedesk.portfolio.dto;
+package com.pulsedesk.marketdata.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
