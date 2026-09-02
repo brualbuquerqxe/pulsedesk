@@ -12,25 +12,25 @@ import com.pulsedesk.marketdata.producer.HistoricalMarketDataEventProducer;
 import com.pulsedesk.marketdata.producer.MarketDataEventProducer;
 
 import com.pulsedesk.marketdata.provider.ExternalMarketDataProvider;
-import com.pulsedesk.marketdata.provider.HistoricalMarketDataProvider;
+import com.pulsedesk.marketdata.provider.AlphaVantageHistoricalMarketDataProvider;
 
 @Service
 public class MarketDataService {
 
     private final ExternalMarketDataProvider marketDataProvider;
-    private final HistoricalMarketDataProvider historicalMarketDataProvider;
+    private final AlphaVantageHistoricalMarketDataProvider alphaVantageHistoricalMarketDataProvider;
 
     private final MarketDataEventProducer eventProducer;
     private final HistoricalMarketDataEventProducer historicalEventProducer;
 
     public MarketDataService(
             ExternalMarketDataProvider marketDataProvider,
-            HistoricalMarketDataProvider historicalMarketDataProvider,
+            AlphaVantageHistoricalMarketDataProvider alphaVantageHistoricalMarketDataProvider,
             MarketDataEventProducer eventProducer,
             HistoricalMarketDataEventProducer historicalEventProducer) {
 
         this.marketDataProvider = marketDataProvider;
-        this.historicalMarketDataProvider = historicalMarketDataProvider;
+        this.alphaVantageHistoricalMarketDataProvider = alphaVantageHistoricalMarketDataProvider;
         this.eventProducer = eventProducer;
         this.historicalEventProducer = historicalEventProducer;
     }
@@ -46,7 +46,7 @@ public class MarketDataService {
 
     public List<HistoricalPriceResponse> getHistoricalPrices(String symbol) {
 
-        return historicalMarketDataProvider
+        return alphaVantageHistoricalMarketDataProvider
                 .getDailyCloseHistory(symbol)
                 .stream()
                 .map(price -> new HistoricalPriceResponse(
@@ -57,7 +57,7 @@ public class MarketDataService {
 
     private void publishHistoricalData(String symbol) {
 
-        List<BigDecimal> closingPrices = historicalMarketDataProvider
+        List<BigDecimal> closingPrices = alphaVantageHistoricalMarketDataProvider
                 .getRecentDailyCloses(symbol);
 
         historicalEventProducer.publish(

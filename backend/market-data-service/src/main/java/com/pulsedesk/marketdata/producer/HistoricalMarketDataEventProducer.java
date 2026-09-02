@@ -13,10 +13,10 @@ import com.pulsedesk.contracts.events.HistoricalMarketDataUpdated;
 @Component
 public class HistoricalMarketDataEventProducer {
 
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, HistoricalMarketDataUpdated> kafkaTemplate;
 
     public HistoricalMarketDataEventProducer(
-            KafkaTemplate<String, Object> kafkaTemplate) {
+            KafkaTemplate<String, HistoricalMarketDataUpdated> kafkaTemplate) {
 
         this.kafkaTemplate = kafkaTemplate;
     }
