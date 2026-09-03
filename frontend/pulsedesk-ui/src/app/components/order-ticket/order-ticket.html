@@ -1,9 +1,9 @@
-<p-card header="Nova ordem">
+<p-card header="New Order">
 
   <div class="order-form">
 
     <div class="field">
-      <label for="symbol">Ativo</label>
+      <label for="symbol">Symbol</label>
 
       <input
         id="symbol"
@@ -13,7 +13,7 @@
     </div>
 
     <div class="field">
-      <label for="quantity">Quantidade</label>
+      <label for="quantity">Quantity</label>
 
       <p-inputnumber
         inputId="quantity"
@@ -23,7 +23,7 @@
     </div>
 
     <div class="field">
-      <label>Lado</label>
+      <label>Side</label>
 
       <p-selectbutton
         [options]="sideOptions"
@@ -34,7 +34,7 @@
     <button
       pButton
       (click)="submitOrder()">
-      Enviar ordem
+      Submit Order
     </button>
 
   </div>

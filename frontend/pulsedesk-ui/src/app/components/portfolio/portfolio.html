@@ -1,23 +1,23 @@
-<p-card header="Portfólio">
+<p-card header="Portfolio">
 
   <div class="portfolio-summary">
 
     <div class="summary-item">
-      <span class="summary-label">Patrimônio total</span>
+      <span class="summary-label">Total Portfolio Value</span>
       <span class="summary-value">
         {{ totalEquity | currency:'USD':'symbol':'1.2-2':'en-US' }}
       </span>
     </div>
 
     <div class="summary-item">
-      <span class="summary-label">Saldo disponível</span>
+      <span class="summary-label">Available Cash</span>
       <span class="summary-value">
         {{ portfolio?.cashBalance | currency:'USD':'symbol':'1.2-2':'en-US' }}
       </span>
     </div>
 
     <div class="summary-item">
-      <span class="summary-label">Posições</span>
+      <span class="summary-label">Positions</span>
       <span class="summary-value">
         {{ positionsValue | currency:'USD':'symbol':'1.2-2':'en-US' }}
       </span>
@@ -25,7 +25,7 @@
 
     <div class="summary-item">
       <span class="summary-label">
-        {{ unrealizedPnL >= 0 ? 'Lucro não realizado' : 'Perda não realizada' }}
+        {{ unrealizedPnL >= 0 ? 'Unrealized profit' : 'Unrealized Loss' }}
       </span>
 
       <span class="summary-value" [class.positive]="unrealizedPnL >= 0" [class.negative]="unrealizedPnL < 0">
@@ -39,10 +39,10 @@
 
     <ng-template #header>
       <tr>
-        <th>Ativo</th>
-        <th>Quantidade</th>
-        <th>Preço médio</th>
-        <th>Último preço</th>
+        <th>Symbol</th>
+        <th>Quantity</th>
+        <th>Average Price</th>
+        <th>Last Price</th>
       </tr>
     </ng-template>
 
