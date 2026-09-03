@@ -46,19 +46,16 @@ public class MarketDataService {
 
     public List<HistoricalPriceResponse> getHistoricalPrices(String symbol) {
 
-        return alphaVantageHistoricalMarketDataProvider
-                .getDailyCloseHistory(symbol)
-                .stream()
-                .map(price -> new HistoricalPriceResponse(
-                        price.date(),
-                        price.closePrice()))
-                .toList();
+        return alphaVantageHistoricalMarketDataProvider.getDailyCloseHistory(symbol);
     }
 
     private void publishHistoricalData(String symbol) {
 
         List<BigDecimal> closingPrices = alphaVantageHistoricalMarketDataProvider
-                .getRecentDailyCloses(symbol);
+                .getDailyCloseHistory(symbol)
+                .stream()
+                .map(HistoricalPriceResponse::closePrice)
+                .toList();
 
         historicalEventProducer.publish(
                 symbol,

@@ -19,8 +19,6 @@ import com.pulsedesk.marketdata.dto.HistoricalPriceResponse;
 @Component
 public class AlphaVantageHistoricalMarketDataProvider {
 
-        private static final int REQUIRED_PRICES = 21;
-
         private final String apiKey;
 
         private final RestClient restClient;
@@ -36,25 +34,6 @@ public class AlphaVantageHistoricalMarketDataProvider {
                 this.restClient = RestClient.builder()
                                 .baseUrl("https://www.alphavantage.co")
                                 .build();
-        }
-
-        public List<BigDecimal> getRecentDailyCloses(String symbol) {
-
-                List<HistoricalPriceResponse> history =
-                                getDailyCloseHistory(symbol);
-
-                if (history.size() < REQUIRED_PRICES) {
-                        throw new IllegalStateException(
-                                        "Not enough historical data for " + symbol);
-                }
-
-                return history
-                                .subList(
-                                                history.size() - REQUIRED_PRICES,
-                                                history.size())
-                                .stream()
-                                .map(HistoricalPriceResponse::closePrice)
-                                .toList();
         }
 
         public List<HistoricalPriceResponse> getDailyCloseHistory(
