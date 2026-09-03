@@ -1,11 +1,11 @@
+import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
-import { CurrencyPipe } from '@angular/common';
 
 import { PortfolioResponse } from '../../models/portfolio-response';
-import { PortfolioService } from '../../services/portfolio-service';
 import { PortfolioWebSocketMessage } from '../../models/portfolio-websocket-message';
+import { PortfolioService } from '../../services/portfolio-service';
 import { Websocket } from '../../services/websocket-service';
 
 @Component({
@@ -24,7 +24,7 @@ export class Portfolio implements OnInit {
 
   ngOnInit() {
     this.portfolioService
-      .getPortfolio('11111111-1111-1111-1111-111111111111')
+      .getPortfolio('33333333-3333-3333-3333-333333333333')
       .subscribe({
         next: (response) => {
           this.portfolio = response;
