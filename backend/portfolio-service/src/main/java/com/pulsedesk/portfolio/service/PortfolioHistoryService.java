@@ -60,15 +60,19 @@ public class PortfolioHistoryService {
 
                 List<Position> currentPositions = positionRepository.findByPortfolioId(portfolio.getId());
 
-                Instant reliableStartInstant = currentPositions.stream()
-                                .map(Position::getCreatedAt)
-                                .max(Instant::compareTo)
-                                .orElseThrow(() -> new IllegalStateException(
-                                                "Cannot determine reliable portfolio history start"));
+                LocalDate endDate = LocalDate.now(ZoneId.of("America/New_York"));
 
-                LocalDate reliableStartDate = reliableStartInstant
-                                .atZone(ZoneId.of("America/New_York"))
-                                .toLocalDate();
+                LocalDate oneMonthAgo = endDate.minusMonths(1);
+
+                LocalDate firstDate = LocalDate.of(2026, 9, 2);
+
+                LocalDate startDate;
+
+                if (oneMonthAgo.isAfter(firstDate)) {
+                        startDate = oneMonthAgo;
+                } else {
+                        startDate = firstDate;
+                }
 
                 List<OrderResponse> orders = tradingClient.getOrderResponses(userId);
 
@@ -78,7 +82,8 @@ public class PortfolioHistoryService {
                                 .toList();
 
                 List<OrderResponse> relevantExecutedOrders = executedOrders.stream()
-                                .filter(order -> !getExecutionDate(order).isBefore(reliableStartDate))
+                                .filter(order -> !getExecutionDate(order)
+                                                .isBefore(startDate))
                                 .toList();
 
                 Set<String> symbols = new HashSet<>();
@@ -108,14 +113,6 @@ public class PortfolioHistoryService {
 
                         waitBeforeNextMarketDataRequest();
                 }
-
-                LocalDate endDate = LocalDate.now(ZoneId.of("America/New_York"));
-
-                LocalDate oneMonthAgo = endDate.minusMonths(1);
-
-                LocalDate startDate = reliableStartDate.isAfter(oneMonthAgo)
-                                ? reliableStartDate
-                                : oneMonthAgo;
 
                 TreeSet<LocalDate> tradingDates = new TreeSet<>();
 
@@ -295,9 +292,24 @@ public class PortfolioHistoryService {
                                 .orElseThrow(() -> new IllegalArgumentException(
                                                 "Portfolio not found for user " + userId));
 
+                LocalDate endDate = LocalDate.now(ZoneId.of("America/New_York"));
+
+                LocalDate oneMonthAgo = endDate.minusMonths(1);
+
+                LocalDate firstDate = LocalDate.of(2026, 9, 2);
+
+                LocalDate startDate = oneMonthAgo.isAfter(firstDate)
+                                ? oneMonthAgo
+                                : firstDate;
+
                 return dailyPortfolioSnapshotRepository
-                                .findByPortfolioIdOrderBySnapshotDateAsc(portfolio.getId())
+                                .findByPortfolioIdOrderBySnapshotDateAsc(
+                                                portfolio.getId())
                                 .stream()
+                                .filter(snapshot -> !snapshot.getSnapshotDate()
+                                                .isBefore(startDate))
+                                .filter(snapshot -> !snapshot.getSnapshotDate()
+                                                .isAfter(endDate))
                                 .map(snapshot -> new PortfolioHistoryPointResponse(
                                                 snapshot.getSnapshotDate(),
                                                 snapshot.getTotalValue()))
