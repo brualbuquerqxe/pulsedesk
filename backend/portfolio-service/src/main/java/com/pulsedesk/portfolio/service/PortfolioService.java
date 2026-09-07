@@ -165,4 +165,19 @@ public class PortfolioService {
         }
     }
 
+    @Transactional
+    public void updateMarketPrice(String symbol, BigDecimal price) {
+
+        List<Position> positions = positionRepository.findBySymbol(symbol);
+
+        for (Position position : positions) {
+            position.setLastPrice(price);
+        }
+
+        positionRepository.saveAll(positions);
+    }
+
+    public List<String> getActiveSymbols() {
+        return positionRepository.findDistinctActiveSymbols();
+    }
 }

@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { ChartModule } from 'primeng/chart';
 import { ChartData, ChartOptions } from 'chart.js';
 import { CardModule } from 'primeng/card';
+import { ChartModule } from 'primeng/chart';
 
 import {
     PortfolioHistoryService
@@ -24,7 +24,7 @@ export class PortfolioHistory implements OnInit {
         inject(PortfolioHistoryService);
 
     private readonly userId =
-        '11111111-1111-1111-1111-111111111111';
+        '33333333-3333-3333-3333-333333333333';
 
     chartData: ChartData<'line'> = {
         labels: [],

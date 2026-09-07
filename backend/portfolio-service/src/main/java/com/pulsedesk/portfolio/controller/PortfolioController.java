@@ -1,18 +1,20 @@
 package com.pulsedesk.portfolio.controller;
 
+import java.util.List;
 import java.util.UUID;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pulsedesk.portfolio.dto.PortfolioResponse;
 import com.pulsedesk.portfolio.service.PortfolioService;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
-// Diz ao Spring que essa classe vai receber requisições HTTP e devolver dados como resposta
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
+@RequestMapping("/api/portfolio")
 public class PortfolioController {
 
     private final PortfolioService portfolioService;
@@ -21,7 +23,7 @@ public class PortfolioController {
         this.portfolioService = portfolioService;
     }
 
-    @GetMapping("/api/portfolio/{userId}")
+    @GetMapping("/{userId}")
     public PortfolioResponse getPortfolio(
             @PathVariable UUID userId) {
 
@@ -29,4 +31,8 @@ public class PortfolioController {
                 .getPortfolioResponseByUserId(userId);
     }
 
+    @GetMapping("/active-symbols")
+    public List<String> getActiveSymbols() {
+        return portfolioService.getActiveSymbols();
+    }
 }

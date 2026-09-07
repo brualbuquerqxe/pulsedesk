@@ -28,7 +28,10 @@ public class AnalyticsService {
                     "At least 21 closing prices are required");
         }
 
-        double volatility = calculateVolatility(closingPrices);
+        List<BigDecimal> recentClosingPrices = closingPrices.subList(closingPrices.size() - REQUIRED_PRICES,
+                closingPrices.size());
+
+        double volatility = calculateVolatility(recentClosingPrices);
 
         BigDecimal volatilityValue = BigDecimal.valueOf(volatility)
                 .setScale(6, RoundingMode.HALF_UP);
@@ -43,8 +46,7 @@ public class AnalyticsService {
                 .build();
     }
 
-    private double calculateVolatility(
-            List<BigDecimal> prices) {
+    private double calculateVolatility(List<BigDecimal> prices) {
 
         double[] returns = new double[prices.size() - 1];
 

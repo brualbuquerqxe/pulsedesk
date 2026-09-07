@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.pulsedesk.analytics.producer.AnalyticsEventProducer;
 import com.pulsedesk.analytics.service.AnalyticsService;
+
 import com.pulsedesk.contracts.events.AnalyticsUpdated;
 import com.pulsedesk.contracts.events.HistoricalMarketDataUpdated;
 
