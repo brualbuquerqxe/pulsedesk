@@ -7,6 +7,30 @@ O **PulseDesk** é uma aplicação de corretora desenvolvida com arquitetura bas
 
 A plataforma permite consultar dados de mercado, enviar ordens de compra e venda, acompanhar o histórico de ordens e visualizar o portfólio do usuário, com atualizações em tempo real.
 
+<br>
+
+<p align="center">
+  <img
+    width="1710"
+    height="959"
+    alt="Visão geral da carteira de ações"
+    src="https://github.com/user-attachments/assets/0022db5a-dbb3-4163-8c03-87487f3bdb1c"
+  />
+  <em>Figura 01: Visão geral da carteira de ações</em>
+</p>
+
+<br>
+
+<p align="center">
+  <img
+    width="1710"
+    height="958"
+    alt="Histórico de ordens realizadas"
+    src="https://github.com/user-attachments/assets/27161387-1b18-4e32-93c1-445644fc30a3"
+  />
+  <em>Figura 02: Histórico de ordens realizadas</em>
+</p>
+
 ## Tecnologias
 
 ### Backend
