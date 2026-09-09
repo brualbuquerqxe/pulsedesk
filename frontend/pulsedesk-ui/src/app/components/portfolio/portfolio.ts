@@ -21,10 +21,12 @@ export class Portfolio implements OnInit {
   private portfolioService = inject(PortfolioService);
   private websocket = inject(Websocket);
   private cdr = inject(ChangeDetectorRef);
+  private readonly userId =
+    '33333333-3333-3333-3333-333333333333';
 
   ngOnInit() {
     this.portfolioService
-      .getPortfolio('33333333-3333-3333-3333-333333333333')
+      .getPortfolio(this.userId)
       .subscribe({
         next: (response) => {
           this.portfolio = response;
@@ -37,7 +39,13 @@ export class Portfolio implements OnInit {
       });
 
     this.websocket.portfolio$.subscribe((message) => {
+
+      if (message.userId !== this.userId) {
+        return;
+      }
+
       this.updateFromWebSocket(message);
+
       this.cdr.markForCheck();
     });
   }
