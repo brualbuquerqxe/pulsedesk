@@ -16,6 +16,9 @@ import org.springframework.web.client.RestClient;
 
 import com.pulsedesk.marketdata.dto.HistoricalPriceResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Component
 public class AlphaVantageHistoricalMarketDataProvider {
 
@@ -23,8 +26,9 @@ public class AlphaVantageHistoricalMarketDataProvider {
 
         private final RestClient restClient;
 
-        private final Map<String, CachedHistory> cache =
-                        new ConcurrentHashMap<>();
+        private final Map<String, CachedHistory> cache = new ConcurrentHashMap<>();
+
+        private static final Logger logger = LoggerFactory.getLogger(AlphaVantageHistoricalMarketDataProvider.class);
 
         public AlphaVantageHistoricalMarketDataProvider(
                         @Value("${alpha-vantage.api-key}") String apiKey) {
@@ -39,15 +43,12 @@ public class AlphaVantageHistoricalMarketDataProvider {
         public List<HistoricalPriceResponse> getDailyCloseHistory(
                         String symbol) {
 
-                String normalizedSymbol =
-                                symbol.strip().toUpperCase();
+                String normalizedSymbol = symbol.strip().toUpperCase();
 
-                LocalDate today =
-                                LocalDate.now(
-                                                ZoneId.of("America/New_York"));
+                LocalDate today = LocalDate.now(
+                                ZoneId.of("America/New_York"));
 
-                CachedHistory cachedHistory =
-                                cache.get(normalizedSymbol);
+                CachedHistory cachedHistory = cache.get(normalizedSymbol);
 
                 if (cachedHistory != null
                                 && cachedHistory.fetchedAt().equals(today)) {
@@ -55,8 +56,7 @@ public class AlphaVantageHistoricalMarketDataProvider {
                         return cachedHistory.prices();
                 }
 
-                List<HistoricalPriceResponse> history =
-                                fetchFromAlphaVantage(normalizedSymbol);
+                List<HistoricalPriceResponse> history = fetchFromAlphaVantage(normalizedSymbol);
 
                 cache.put(
                                 normalizedSymbol,
@@ -100,6 +100,12 @@ public class AlphaVantageHistoricalMarketDataProvider {
                         body = body.strip();
 
                         if (!body.startsWith("timestamp,")) {
+
+                                logger.error(
+                                                "Unexpected Alpha Vantage response for {}: {}",
+                                                symbol,
+                                                body);
+
                                 throw new IllegalStateException(
                                                 "Alpha Vantage did not return historical data");
                         }
@@ -127,11 +133,9 @@ public class AlphaVantageHistoricalMarketDataProvider {
 
                 String[] values = line.split(",");
 
-                LocalDate date =
-                                LocalDate.parse(values[0]);
+                LocalDate date = LocalDate.parse(values[0]);
 
-                BigDecimal closePrice =
-                                new BigDecimal(values[4]);
+                BigDecimal closePrice = new BigDecimal(values[4]);
 
                 return new HistoricalPriceResponse(
                                 date,

@@ -39,8 +39,21 @@ public class PortfolioHistoryScheduler {
         logger.info("Updating portfolio histories");
 
         portfolioRepository.findAll()
-                .forEach(portfolio -> portfolioHistoryService
-                        .reconstructPortfolioHistory(
-                                portfolio.getUser().getId()));
+                .forEach(portfolio -> {
+
+                    try {
+
+                        portfolioHistoryService
+                                .reconstructPortfolioHistory(
+                                        portfolio.getUser().getId());
+
+                    } catch (Exception e) {
+
+                        logger.error(
+                                "Failed to reconstruct portfolio history for user {}",
+                                portfolio.getUser().getId(),
+                                e);
+                    }
+                });
     }
 }
