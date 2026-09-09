@@ -21,8 +21,8 @@ public class Position {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @ManyToOne // Muitas posições para apenas um portfolio
-    @JoinColumn(name = "portfolio_id", nullable = false) // Chave estrangeira para portfolio.id
+    @ManyToOne
+    @JoinColumn(name = "portfolio_id", nullable = false) 
     private Portfolio portfolio;
 
     @Column(name = "symbol", nullable = false)
@@ -53,7 +53,6 @@ public class Position {
         this.averagePrice = averagePrice;
     }
 
-    // Antes de adicionar a entidade no banco, cria ID da posição
     @PrePersist
     private void newId() {
         if (id == null) {
@@ -61,7 +60,6 @@ public class Position {
         }
     }
 
-    // Gets, já que é private
     public UUID getId() {
         return id;
     }

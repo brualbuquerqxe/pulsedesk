@@ -26,7 +26,6 @@ export class Dashboard implements OnInit {
   private websocket = inject(Websocket);
   private cdr = inject(ChangeDetectorRef);
 
-  // ngOnInit é inicializado apenas uma vez, ent faz sentido iniciar a conexão por ali.
   ngOnInit() {
     this.websocket.connectionStatus$.subscribe((connected) => {
       this.isRealtimeConnected = connected;

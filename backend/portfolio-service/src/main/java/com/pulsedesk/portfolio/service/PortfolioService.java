@@ -35,7 +35,6 @@ public class PortfolioService {
         this.portfolioUpdatedEventProducer = portfolioUpdatedEventProducer;
     }
 
-    // Retorna o portfolio com base no ID do usuário
     public Portfolio getPortfolioByUserId(UUID userId) {
         return portfolioRepository
                 .findByUserId(userId)
@@ -43,7 +42,6 @@ public class PortfolioService {
                         "Portfolio not found for user " + userId));
     }
 
-    // Retorna lista de posições daquele portfólio
     public List<Position> getPositionsByPortfolioId(UUID portfolioId) {
         return positionRepository.findByPortfolioId(portfolioId);
     }
@@ -52,22 +50,18 @@ public class PortfolioService {
 
         Portfolio portfolio = getPortfolioByUserId(userId);
 
-        // Lista com as posições que pertencem ao portfólio
         List<Position> positions = getPositionsByPortfolioId(portfolio.getId());
 
-        // Muda a classe, já que essa tem apenas as info transmitidas
         List<PositionResponse> positionResponses = new ArrayList<>();
 
         for (Position position : positions) {
 
-            // Cria um objeto de PositionResponse
             PositionResponse response = new PositionResponse(
                     position.getSymbol(),
                     position.getQuantity(),
                     position.getAveragePrice(),
                     position.getLastPrice());
 
-            // Precisa repassar para o Portfolio
             positionResponses.add(response);
         }
 

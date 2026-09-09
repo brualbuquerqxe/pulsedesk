@@ -10,6 +10,5 @@ import com.pulsedesk.portfolio.entity.Portfolio;
 public interface PortfolioRepository
         extends JpaRepository<Portfolio, UUID> {
 
-    // Encontra o portfolio com base no ID do usuário (portfolio.user.id)
     Optional<Portfolio> findByUserId(UUID userId);
 }
