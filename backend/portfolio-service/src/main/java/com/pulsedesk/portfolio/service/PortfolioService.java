@@ -18,7 +18,6 @@ import com.pulsedesk.portfolio.exception.PortfolioNotFoundException;
 import com.pulsedesk.portfolio.producer.PortfolioUpdatedEventProducer;
 import com.pulsedesk.portfolio.repository.PortfolioRepository;
 import com.pulsedesk.portfolio.repository.PositionRepository;
-import com.pulsedesk.portfolio.producer.PortfolioUpdatedEventProducer;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -175,6 +174,12 @@ public class PortfolioService {
         }
 
         positionRepository.saveAll(positions);
+
+        for (Position position : positions) {
+            portfolioUpdatedEventProducer.publish(
+                    position.getPortfolio(),
+                    position);
+        }
     }
 
     public List<String> getActiveSymbols() {
