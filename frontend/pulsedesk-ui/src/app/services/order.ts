@@ -14,7 +14,6 @@ export class Order {
         );
     }
 
-    // Espera receber uma lista de ordens
     getOrders(userId: string) {
         return this.http.get<OrderResponse[]>(
             `http://localhost:8082/api/orders/${userId}`

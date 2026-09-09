@@ -9,11 +9,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
-@Entity // Representa uma entidade persistida no banco de dados
-@Table(name = "app_users", schema = "portfolio") // Qual tabela corresponde à classe
+@Entity
+@Table(name = "app_users", schema = "portfolio")
 public class AppUser {
 
-    @Id // Marca qual é a chave primária
+    @Id
     @Column(name = "id", nullable = false)
     private UUID id;
 
@@ -23,16 +23,13 @@ public class AppUser {
     @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
     private Instant createdAt;
 
-    // Para o JPA conseguir instanciar a entidade (lê da tabela)
     protected AppUser() {
     }
 
-    // Usado pela aplicação quando quiser criar um novo usuário
     public AppUser(String displayName) {
         this.displayName = displayName;
     }
 
-    // Antes de adicionar a entidade no banco, cria ID
     @PrePersist
     private void newId() {
         if (id == null) {
@@ -40,7 +37,6 @@ public class AppUser {
         }
     }
 
-    // Gets, já que é private
     public UUID getId() {
         return id;
     }
@@ -53,7 +49,6 @@ public class AppUser {
         return createdAt;
     }
 
-    // Define o nome
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }

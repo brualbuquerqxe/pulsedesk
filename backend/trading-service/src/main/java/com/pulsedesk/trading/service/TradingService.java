@@ -67,14 +67,12 @@ public class TradingService {
                                         "Order side must be BUY or SELL");
                 }
 
-                // Para o banco
                 TradeSide tradeSide = TradeSide.valueOf(side.name());
 
                 Instant now = Instant.now();
 
                 ExecutedOrderSide executedSide = ExecutedOrderSide.valueOf(side.name());
 
-                // Identifica a ordem no banco
                 UUID id = UUID.randomUUID();
 
                 UUID orderId = UUID.randomUUID();
@@ -92,7 +90,6 @@ public class TradingService {
                                 .setTimestamp(now.toString())
                                 .build();
 
-                // Salva ordem no banco
                 orderRepository.save(order);
 
                 orderEventProducer.publishCreated(eventCreation);

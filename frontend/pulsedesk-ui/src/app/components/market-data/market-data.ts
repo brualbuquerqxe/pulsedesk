@@ -19,7 +19,6 @@ import { ButtonModule } from 'primeng/button';
 })
 export class MarketData implements OnInit {
 
-  // Pode começar como indefinida
   marketData?: MarketDataResponse;
 
   selectedSymbol = 'AAPL';

@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-// Define o formato dos dados que serão enviados pela API pro frontend
 public class PortfolioResponse {
 
     private UUID portfolioId;

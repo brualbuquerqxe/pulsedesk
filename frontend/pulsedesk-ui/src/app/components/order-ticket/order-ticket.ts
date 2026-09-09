@@ -41,7 +41,6 @@ export class OrderTicket implements OnInit {
       quantity: this.quantity
     };
 
-    // Subscribe: a chamada HHTP é finalmente disparada
     this.orderService.createOrder(order).subscribe({
       next: () => { },
       error: (error) => {

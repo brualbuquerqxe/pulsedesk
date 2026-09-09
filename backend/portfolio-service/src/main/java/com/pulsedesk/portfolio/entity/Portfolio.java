@@ -20,32 +20,28 @@ public class Portfolio {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @OneToOne // user não é uma coluna, mas, sim, relação com outra entidade
-    @JoinColumn(name = "user_id", nullable = false) // Chave estrangeira para app_users.id
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private AppUser user;
 
     @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
     private Instant createdAt;
 
-    // Quanto o usuário tem de saldo
     @Column(name = "cash_balance", nullable = false)
     private BigDecimal cashBalance;
 
-    // Última atualização
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
     protected Portfolio() {
     }
 
-    // Quando cria um portfólio, só precisa saber de quem que é + $$
     public Portfolio(AppUser user, BigDecimal cashBalance) {
         this.user = user;
         this.cashBalance = cashBalance;
 
     }
 
-    // Antes de adicionar a entidade no banco, cria ID
     @PrePersist
     private void newId() {
         if (id == null) {
@@ -53,7 +49,6 @@ public class Portfolio {
         }
     }
 
-    // Gets, já que é private
     public UUID getId() {
         return id;
     }
