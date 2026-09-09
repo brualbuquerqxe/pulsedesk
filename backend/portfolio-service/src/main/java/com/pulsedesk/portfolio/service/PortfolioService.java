@@ -174,12 +174,6 @@ public class PortfolioService {
         }
 
         positionRepository.saveAll(positions);
-
-        for (Position position : positions) {
-            portfolioUpdatedEventProducer.publish(
-                    position.getPortfolio(),
-                    position);
-        }
     }
 
     public List<String> getActiveSymbols() {

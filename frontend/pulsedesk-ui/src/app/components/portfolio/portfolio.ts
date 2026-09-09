@@ -7,6 +7,7 @@ import { PortfolioResponse } from '../../models/portfolio-response';
 import { PortfolioWebSocketMessage } from '../../models/portfolio-websocket-message';
 import { PortfolioService } from '../../services/portfolio-service';
 import { Websocket } from '../../services/websocket-service';
+import { MarketDataWebSocketMessage } from '../../models/market-data-websocket-message';
 
 @Component({
   selector: 'app-portfolio',
@@ -21,8 +22,7 @@ export class Portfolio implements OnInit {
   private portfolioService = inject(PortfolioService);
   private websocket = inject(Websocket);
   private cdr = inject(ChangeDetectorRef);
-  private readonly userId =
-    '33333333-3333-3333-3333-333333333333';
+  private readonly userId = '33333333-3333-3333-3333-333333333333';
 
   ngOnInit() {
     this.portfolioService
@@ -30,7 +30,6 @@ export class Portfolio implements OnInit {
       .subscribe({
         next: (response) => {
           this.portfolio = response;
-
           this.cdr.markForCheck();
         },
         error: (error) => {
@@ -45,7 +44,11 @@ export class Portfolio implements OnInit {
       }
 
       this.updateFromWebSocket(message);
+      this.cdr.markForCheck();
+    });
 
+    this.websocket.marketData$.subscribe((message) => {
+      this.updateMarketPrice(message);
       this.cdr.markForCheck();
     });
   }
@@ -125,5 +128,27 @@ export class Portfolio implements OnInit {
     }
 
     return this.portfolio.cashBalance + this.positionsValue;
+  }
+
+  updateMarketPrice(message: MarketDataWebSocketMessage) {
+
+    if (!this.portfolio) {
+      return;
+    }
+
+    const index = this.portfolio.positions.findIndex(
+      position => position.symbol === message.symbol
+    );
+
+    if (index === -1) {
+      return;
+    }
+
+    this.portfolio.positions[index] = {
+      ...this.portfolio.positions[index],
+      lastPrice: message.price
+    };
+
+    this.portfolio.positions = [...this.portfolio.positions];
   }
 }
