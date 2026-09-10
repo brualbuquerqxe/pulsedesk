@@ -71,6 +71,7 @@ pulsedesk/
 │   ├── market-data-service/
 │   ├── trading-service/
 │   ├── portfolio-service/
+|   ├── analytics-service/
 │   └── websocket-gateway/
 │
 ├── frontend/
