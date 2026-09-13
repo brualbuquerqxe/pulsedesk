@@ -164,6 +164,7 @@ services:
           market-data.updated \
           order.created \
           historical-market-data.updated \
+          analytics.updated \
           order.executed \
           order.rejected \
           portfolio.updated
