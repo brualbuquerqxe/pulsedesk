@@ -8,14 +8,42 @@
 .idea/
 .vscode/
 *.iml
+*.iws
+*.ipr
+
+# STS / Eclipse
+**/.apt_generated/
+**/.classpath
+**/.factorypath
+**/.project
+**/.settings/
+**/.springBeans
+**/.sts4-cache/
+
+# NetBeans
+**/nbproject/private/
+**/nbbuild/
+**/nbdist/
+**/.nb-gradle/
 
 # Java / Maven
 **/target/
+**/build/
 *.class
 *.log
+**/.mvn/wrapper/maven-wrapper.jar
 
 # Angular / Node
 **/node_modules/
 **/.angular/
 **/dist/
 **/coverage/
+**/tmp/
+**/out-tsc/
+**/bazel-out/
+**/.sass-cache/
+**/typings/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
