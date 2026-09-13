@@ -279,7 +279,6 @@ ws://localhost:8084/ws
 - Ambiente voltado ao desenvolvimento local e sem autenticação de usuários.
 - Usuário de demonstração definido por identificador fixo no frontend.
 - Disponibilidade e frequência dos dados sujeitas aos limites das APIs Finnhub e Alpha Vantage.
-- O fluxo de analytics depende do tópico `analytics.updated`, referenciado pelos serviços, mas ainda ausente da lista criada pelo `kafka-init` no `compose.yaml`.
 - Tópicos com uma partição e fator de replicação 1, adequados ao ambiente local.
 
 ## Objetivo do projeto
