@@ -200,16 +200,7 @@ docker compose up --build
 
 Quando os containers estiverem prontos, acesse [http://localhost:4200](http://localhost:4200).
 
-O PostgreSQL é inicializado com um usuário e uma carteira de demonstração:
-
-```text
-userId:      11111111-1111-1111-1111-111111111111
-portfolioId: 22222222-2222-2222-2222-222222222222
-saldo:       USD 100,000.00
-```
-
-> [!NOTE]
-> A migration cria o usuário `11111111-1111-1111-1111-111111111111`, mas os componentes atuais do frontend usam o identificador fixo `33333333-3333-3333-3333-333333333333`. Em um banco novo, alinhe esses identificadores antes de usar as telas de ordens e carteira.
+O PostgreSQL é inicializado com um usuário e uma carteira de demonstração.
 
 ### 4. Acompanhe ou encerre os containers
 
