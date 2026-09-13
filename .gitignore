@@ -38,3 +38,12 @@
 **/.angular/
 **/dist/
 **/coverage/
+**/tmp/
+**/out-tsc/
+**/bazel-out/
+**/.sass-cache/
+**/typings/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
