@@ -243,21 +243,6 @@ O Analytics Service funciona apenas como consumidor e produtor Kafka e, por isso
 | `GET` | `/api/portfolio/{userId}/history` | Retorna a evolução diária do valor da carteira. |
 | `POST` | `/api/portfolio/{userId}/history/reconstruct` | Solicita a reconstrução do histórico e retorna HTTP `204 No Content`. |
 
-### Exemplo de ordem
-
-```bash
-curl -i -X POST http://localhost:8082/api/orders \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "userId": "11111111-1111-1111-1111-111111111111",
-    "symbol": "AAPL",
-    "side": "BUY",
-    "quantity": 1
-  }'
-```
-
-Os valores aceitos para `side` são `BUY` e `SELL`, e `quantity` deve ser positiva.
-
 ## WebSocket
 
 O frontend abre uma conexão STOMP em:
