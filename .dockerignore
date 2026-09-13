@@ -1,0 +1,16 @@
+.git
+.gitignore
+.env
+
+**/target
+**/node_modules
+**/.angular
+**/dist
+**/coverage
+
+docs
+README.md
+
+.DS_Store
+.idea
+.vscode
